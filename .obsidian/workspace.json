@@ -4,37 +4,25 @@
     "type": "split",
     "children": [
       {
-        "id": "6b6a26b10befdb71",
+        "id": "203c47f002e2738d",
         "type": "tabs",
         "children": [
           {
-            "id": "e4cb2ddd3714c363",
+            "id": "f7b9c4ff32866168",
             "type": "leaf",
             "state": {
               "type": "markdown",
               "state": {
-                "file": "data_structure&algorithm/Sort algorithm -- All in one.md",
+                "file": "Sort algorithm -- All in one.md",
                 "mode": "source",
-                "backlinks": false,
-                "source": false
-              }
-            }
-          },
-          {
-            "id": "3ae22d30bc2d0500",
-            "type": "leaf",
-            "state": {
-              "type": "markdown",
-              "state": {
-                "file": "Linux commands ALL IN ONE.md",
-                "mode": "source",
-                "backlinks": false,
-                "source": false
-              }
+                "source": false,
+                "backlinks": false
+              },
+              "icon": "lucide-file",
+              "title": "Sort algorithm -- All in one"
             }
           }
-        ],
-        "currentTab": 1
+        ]
       }
     ],
     "direction": "vertical"
@@ -53,8 +41,11 @@
             "state": {
               "type": "file-explorer",
               "state": {
-                "sortOrder": "alphabetical"
-              }
+                "sortOrder": "alphabetical",
+                "autoReveal": false
+              },
+              "icon": "lucide-folder-closed",
+              "title": "Files"
             }
           },
           {
@@ -63,8 +54,13 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "Linux commands ALL IN ONE.md"
-              }
+                "file": "C/2019/12_18/C_Programming_Language.md",
+                "followCursor": false,
+                "showSearch": false,
+                "searchQuery": ""
+              },
+              "icon": "lucide-list",
+              "title": "Outline of C_Programming_Language"
             }
           },
           {
@@ -73,13 +69,15 @@
             "state": {
               "type": "search",
               "state": {
-                "query": "完全二叉树",
+                "query": "",
                 "matchingCase": false,
                 "explainSearch": false,
                 "collapseAll": false,
                 "extraContext": false,
                 "sortOrder": "alphabetical"
-              }
+              },
+              "icon": "lucide-search",
+              "title": "Search"
             }
           },
           {
@@ -87,15 +85,16 @@
             "type": "leaf",
             "state": {
               "type": "bookmarks",
-              "state": {}
+              "state": {},
+              "icon": "lucide-bookmark",
+              "title": "Bookmarks"
             }
           }
-        ],
-        "currentTab": 1
+        ]
       }
     ],
     "direction": "horizontal",
-    "width": 323.5
+    "width": 261.5
   },
   "right": {
     "id": "3ca9cd71ea6552bb",
@@ -111,10 +110,12 @@
             "state": {
               "type": "outgoing-link",
               "state": {
-                "file": "Linux commands ALL IN ONE.md",
+                "file": "Git/Git.md",
                 "linksCollapsed": false,
                 "unlinkedCollapsed": true
-              }
+              },
+              "icon": "links-going-out",
+              "title": "Outgoing links from Git"
             }
           },
           {
@@ -123,7 +124,7 @@
             "state": {
               "type": "backlink",
               "state": {
-                "file": "Linux commands ALL IN ONE.md",
+                "file": "Git/Git.md",
                 "collapseAll": false,
                 "extraContext": false,
                 "sortOrder": "alphabetical",
@@ -131,7 +132,9 @@
                 "searchQuery": "",
                 "backlinkCollapsed": false,
                 "unlinkedCollapsed": true
-              }
+              },
+              "icon": "links-coming-in",
+              "title": "Backlinks for Git"
             }
           },
           {
@@ -142,7 +145,9 @@
               "state": {
                 "sortOrder": "frequency",
                 "useHierarchy": true
-              }
+              },
+              "icon": "lucide-tags",
+              "title": "Tags"
             }
           },
           {
@@ -151,8 +156,10 @@
             "state": {
               "type": "file-properties",
               "state": {
-                "file": "Linux commands ALL IN ONE.md"
-              }
+                "file": "Git/Git.md"
+              },
+              "icon": "lucide-info",
+              "title": "File properties for Git"
             }
           },
           {
@@ -164,7 +171,9 @@
                 "sortOrder": "frequency",
                 "showSearch": false,
                 "searchQuery": ""
-              }
+              },
+              "icon": "lucide-archive",
+              "title": "All properties"
             }
           },
           {
@@ -172,7 +181,9 @@
             "type": "leaf",
             "state": {
               "type": "git-history-view",
-              "state": {}
+              "state": {},
+              "icon": "lucide-ghost",
+              "title": "git-history-view"
             }
           }
         ]
@@ -184,6 +195,7 @@
   },
   "left-ribbon": {
     "hiddenItems": {
+      "bases:Create new base": false,
       "switcher:Open quick switcher": true,
       "graph:Open graph view": false,
       "canvas:Create new canvas": false,
@@ -192,27 +204,50 @@
       "workspaces:Manage workspace layouts": false
     }
   },
-  "active": "b5f4eacffcd3c4f2",
+  "active": "f7b9c4ff32866168",
   "lastOpenFiles": [
-    "book_notes/csapp.md",
-    "data_structure&algorithm/Sort algorithm -- All in one.md",
-    "book_notes/How to write shared libries.md",
-    "book_notes/Multiplayer Game Programming.md",
-    "data_structure&algorithm/DataStructure&Algorithm.md",
-    "MarkDown/markdown.md",
+    "git.md",
+    "cpp_lang.md",
+    "cpp_lang.temp",
+    "c_lang.md",
+    "fontend/HTML/1月16日/HTML/HTML简介与常用标签.docx",
+    "fontend/HTML/1月16日/HTML/HTML元素排列的约束-文档流.docx",
+    "fontend/CSS/css/css.docx",
+    "fontend/HTML/1月16日/HTML",
+    "fontend/jQuery/jQuery编程.docx",
+    "fontend/jQuery/jquery3.ppt",
+    "fontend/jQuery/jquery2.ppt",
+    "fontend/jQuery/jquery1.ppt",
+    "fontend/Session/Session模型 .png",
+    "fontend/Session/Session.docx",
+    "mssqlserver/SQL中捕获异常的语法.png",
+    "mssqlserver/两种死锁发生的情况.png",
+    "mssqlserver/会话的解析.png",
+    "attachment/canvas/How to write shared libries.canvas",
+    "Untitled.canvas",
+    "Sort algorithm -- All in one.md",
+    "attachment/canvas/Untitled.canvas",
+    "attachment/canvas/Untitled 2.canvas",
+    "attachment/canvas/Untitled 1.canvas",
     "cpp/2020/5_28/cpp_programming_language.md",
+    "C/2019/12_18/C_Programming_Language.md",
+    "data_structure&algorithm/Sort algorithm -- All in one.md",
+    "book_notes/csapp.md",
+    "book_notes/Multiplayer Game Programming.md",
+    "book_notes/How to write shared libries.md",
+    "data_structure&algorithm/DataStructure&Algorithm.md",
+    "tools/gdb.md",
+    "c_Sharp/2017/11_18/try-catch/try-catch的应用与方法.png",
+    "c_Sharp/2017/11_16/decimal类型 金融计算.png",
+    "Linux commands ALL IN ONE.md",
+    "().md",
+    "Git/Git.md",
+    "MarkDown/markdown.md",
     "c_Sharp/2019/8_6/迭代器模式.md",
     "c_Sharp/2019/8_6/Linq.md",
     "c_Sharp/2019/8_4/扩展方法.md",
     "c_Sharp/2019/7_14/邮件发送.md",
-    "tools/gdb.md",
-    "tools",
-    "Linux commands ALL IN ONE.md",
-    "C/2019/12_18/C_Programming_Language.md",
-    "attachment/canvas/How to write shared libries.canvas",
-    "book_notes/书单",
     "book_notes/Untitled.md",
-    "attachment/canvas/Untitled 1.canvas",
     "Untitled 2.md",
     "Untitled 1.md",
     "Media Note - Obsidian 1.5版本新功能探秘：高效管理表格和编辑文本！.md",
@@ -220,30 +255,12 @@
     "attachment/canvas/Untitled 11.canvas",
     "attachment/canvas/asdqwd.canvas",
     "attachment/excalidraw/Drawing 2024-05-13 18.22.39.excalidraw.md",
-    "attachment/excalidraw/Drawing 2024-05-13 18.20.47.excalidraw.md",
-    "attachment/excalidraw/Drawing 2024-05-13 18.21.34.excalidraw.md",
-    "Media Note - 也许是B站最好的Obsidian新手教程！爆肝30天，一站式入门双向链接笔记软件｜黑曜石.md",
     "attachment/canvas/Untitled 10.canvas",
     "attachment/canvas/Untitled 9.canvas",
     "attachment/canvas/Untitled 8.canvas",
-    "How To Write Shared Libraries.pdf",
-    "book_notes/How To Write Shared Libraries.pdf",
-    "How To Write Shared Libraries 1.pdf",
-    "asdasd.md",
-    "C_Programming_Language 1.md",
-    "attachment/excalidraw/Drawing 2024-05-13 23.48.53.excalidraw.md",
     "attachment/excalidraw/Drawing 2024-05-13 22.46.57.excalidraw.png",
     "attachment/excalidraw/Drawing 2024-05-13 22.46.57.excalidraw 1.png",
     "c_Sharp/2017/12_22/focus焦点的使用.png",
-    "attachment/canvas/Untitled 7.canvas",
-    "attachment/canvas/Untitled 6.canvas",
-    "attachment/canvas/Untitled 5.canvas",
-    "C/2019/12_18/C_Programming_Language.html",
-    "attachment/excalidraw/Muyao-Softbrush-2.ttf",
-    "attachment/excalidraw",
-    "attachment/canvas",
-    "attachment",
-    "c_Sharp/664ba37eeee9f4623c06c066867f1d38_r.jpg",
-    "c_Sharp/微信图片_20171122120534.jpg"
+    "c_Sharp/664ba37eeee9f4623c06c066867f1d38_r.jpg"
   ]
 }

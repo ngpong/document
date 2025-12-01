@@ -5,7 +5,7 @@
   "nativeMenus": false,
   "baseFontSizeAction": true,
   "interfaceFontFamily": "Microsoft YaHei UI",
-  "baseFontSize": 22,
+  "baseFontSize": 19,
   "showViewHeader": true,
   "enabledCssSnippets": [
     "obsidian-default-theme.css",
@@ -22,6 +22,6 @@
     "修改文件标题的格式",
     "html-tabs"
   ],
-  "monospaceFontFamily": "Cascadia Code,FZQiTi-S14S",
-  "textFontFamily": "Times New Roman,FZSongKeBenXiuKaiS-R-GB"
+  "monospaceFontFamily": "CaskaydiaCove Nerd Font,FZKai-Z03S",
+  "textFontFamily": "Times New Roman,LXGW WenKai,FZKai-Z03S"
 }
