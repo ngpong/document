@@ -4,22 +4,22 @@
     "type": "split",
     "children": [
       {
-        "id": "203c47f002e2738d",
+        "id": "5de7ac5a18246a23",
         "type": "tabs",
         "children": [
           {
-            "id": "f7b9c4ff32866168",
+            "id": "8d1d0ce7c24ad3de",
             "type": "leaf",
             "state": {
               "type": "markdown",
               "state": {
-                "file": "Sort algorithm -- All in one.md",
+                "file": "Multiplayer Game Programming.md",
                 "mode": "source",
                 "source": false,
                 "backlinks": false
               },
               "icon": "lucide-file",
-              "title": "Sort algorithm -- All in one"
+              "title": "Multiplayer Game Programming"
             }
           }
         ]
@@ -54,13 +54,13 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "C/2019/12_18/C_Programming_Language.md",
+                "file": "docker.md",
                 "followCursor": false,
                 "showSearch": false,
                 "searchQuery": ""
               },
               "icon": "lucide-list",
-              "title": "Outline of C_Programming_Language"
+              "title": "Outline of docker"
             }
           },
           {
@@ -69,7 +69,7 @@
             "state": {
               "type": "search",
               "state": {
-                "query": "",
+                "query": "tag:#backend",
                 "matchingCase": false,
                 "explainSearch": false,
                 "collapseAll": false,
@@ -94,7 +94,8 @@
       }
     ],
     "direction": "horizontal",
-    "width": 261.5
+    "width": 261.5,
+    "collapsed": true
   },
   "right": {
     "id": "3ca9cd71ea6552bb",
@@ -204,12 +205,22 @@
       "workspaces:Manage workspace layouts": false
     }
   },
-  "active": "f7b9c4ff32866168",
+  "active": "8d1d0ce7c24ad3de",
   "lastOpenFiles": [
-    "git.md",
+    "Untitled.base",
     "cpp_lang.md",
-    "cpp_lang.temp",
     "c_lang.md",
+    "Multiplayer Game Programming.md",
+    "docker.md",
+    "Sort algorithm -- All in one.md",
+    "csapp.md",
+    "How to write shared libries.md",
+    "markdown.md",
+    "DataStructure&Algorithm.md",
+    "Linux commands ALL IN ONE.md",
+    "git.md",
+    "gdb.md",
+    "cpp_lang.temp",
     "fontend/HTML/1月16日/HTML/HTML简介与常用标签.docx",
     "fontend/HTML/1月16日/HTML/HTML元素排列的约束-文档流.docx",
     "fontend/CSS/css/css.docx",
@@ -219,13 +230,11 @@
     "fontend/jQuery/jquery2.ppt",
     "fontend/jQuery/jquery1.ppt",
     "fontend/Session/Session模型 .png",
-    "fontend/Session/Session.docx",
     "mssqlserver/SQL中捕获异常的语法.png",
     "mssqlserver/两种死锁发生的情况.png",
     "mssqlserver/会话的解析.png",
     "attachment/canvas/How to write shared libries.canvas",
     "Untitled.canvas",
-    "Sort algorithm -- All in one.md",
     "attachment/canvas/Untitled.canvas",
     "attachment/canvas/Untitled 2.canvas",
     "attachment/canvas/Untitled 1.canvas",
@@ -239,22 +248,13 @@
     "tools/gdb.md",
     "c_Sharp/2017/11_18/try-catch/try-catch的应用与方法.png",
     "c_Sharp/2017/11_16/decimal类型 金融计算.png",
-    "Linux commands ALL IN ONE.md",
     "().md",
     "Git/Git.md",
     "MarkDown/markdown.md",
     "c_Sharp/2019/8_6/迭代器模式.md",
     "c_Sharp/2019/8_6/Linq.md",
-    "c_Sharp/2019/8_4/扩展方法.md",
-    "c_Sharp/2019/7_14/邮件发送.md",
-    "book_notes/Untitled.md",
-    "Untitled 2.md",
-    "Untitled 1.md",
-    "Media Note - Obsidian 1.5版本新功能探秘：高效管理表格和编辑文本！.md",
-    "Untitled 3.md",
     "attachment/canvas/Untitled 11.canvas",
     "attachment/canvas/asdqwd.canvas",
-    "attachment/excalidraw/Drawing 2024-05-13 18.22.39.excalidraw.md",
     "attachment/canvas/Untitled 10.canvas",
     "attachment/canvas/Untitled 9.canvas",
     "attachment/canvas/Untitled 8.canvas",

@@ -4,14 +4,14 @@
 2. c\\\[ontinue\]: continue running your program
 3. n\\\[i\]: next source \[or machine instruction\]
 4. s\\\[i\]:: step source \[or machine instruction\]
-6. source ***/path/of/script***: read, execute GDB commands from file
-7. b: set breakpoint at next instruction
+5. source ***/path/of/script***: read, execute GDB commands from file
+6. b: set breakpoint at next instruction
     -  b \[***file***:\]***func***: set breakpoint at function \[in file\]
     -  b \[***file***:\]*ln*: set breakpoint at line number \[in file\]
     -  break \****addr***: set breakpoint at address
     -  break . . . if ***expr***: break conditionally on nonzero expr
-8. cond ***n*** \[***expr***\]: new conditional expression on breakpoint n \[make unconditional if no expr\]
-9. info
+7. cond ***n*** \[***expr***\]: new conditional expression on breakpoint n \[make unconditional if no expr\]
+8. info
   -  i\\\[nfo\] ***b***\[***reak***\]***: show defined breakpoints
   -  i\\\[nfo\] ***w***\[***atch***\]: show defined watchpoints
   -  i\\\[nfo\] ***f***\[***rame***\] \[***addr***\]: describe selected frame, or frame at addr 
