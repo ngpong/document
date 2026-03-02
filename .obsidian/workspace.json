@@ -4,22 +4,37 @@
     "type": "split",
     "children": [
       {
-        "id": "5de7ac5a18246a23",
+        "id": "96cf262a689a7026",
         "type": "tabs",
         "children": [
           {
-            "id": "8d1d0ce7c24ad3de",
+            "id": "b896fa41e7789826",
             "type": "leaf",
             "state": {
               "type": "markdown",
               "state": {
-                "file": "Multiplayer Game Programming.md",
+                "file": "C++ Concurrency IN ACTION.md",
                 "mode": "source",
                 "source": false,
                 "backlinks": false
               },
               "icon": "lucide-file",
-              "title": "Multiplayer Game Programming"
+              "title": "C++ Concurrency IN ACTION"
+            }
+          },
+          {
+            "id": "79dec8d4f3e68dd9",
+            "type": "leaf",
+            "state": {
+              "type": "markdown",
+              "state": {
+                "file": "Sort algorithm -- All in one.md",
+                "mode": "source",
+                "source": false,
+                "backlinks": false
+              },
+              "icon": "lucide-file",
+              "title": "Sort algorithm -- All in one"
             }
           }
         ]
@@ -54,13 +69,13 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "docker.md",
+                "file": "C++ Concurrency IN ACTION.md",
                 "followCursor": false,
                 "showSearch": false,
                 "searchQuery": ""
               },
               "icon": "lucide-list",
-              "title": "Outline of docker"
+              "title": "Outline of C++ Concurrency IN ACTION"
             }
           },
           {
@@ -90,12 +105,12 @@
               "title": "Bookmarks"
             }
           }
-        ]
+        ],
+        "currentTab": 1
       }
     ],
     "direction": "horizontal",
-    "width": 261.5,
-    "collapsed": true
+    "width": 411.5
   },
   "right": {
     "id": "3ca9cd71ea6552bb",
@@ -205,18 +220,19 @@
       "workspaces:Manage workspace layouts": false
     }
   },
-  "active": "8d1d0ce7c24ad3de",
+  "active": "b896fa41e7789826",
   "lastOpenFiles": [
-    "Untitled.base",
-    "cpp_lang.md",
-    "c_lang.md",
-    "Multiplayer Game Programming.md",
-    "docker.md",
     "Sort algorithm -- All in one.md",
+    "C++ Concurrency IN ACTION.md",
+    "c_lang.md",
+    "cpp_lang.md",
+    "DataStructure&Algorithm.md",
+    "Multiplayer Game Programming.md",
     "csapp.md",
+    "Untitled.base",
+    "docker.md",
     "How to write shared libries.md",
     "markdown.md",
-    "DataStructure&Algorithm.md",
     "Linux commands ALL IN ONE.md",
     "git.md",
     "gdb.md",
