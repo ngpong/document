@@ -1,0 +1,12 @@
+
+{
+	"id": "media-slider",
+	"name": "Media Slider",
+	"version": "1.3.6",
+	"minAppVersion": "1.1.0",
+	"description": "A media slider for images, gifs, audios, videos, and PDFs.",
+	"author": "Aditya Amatya",
+	"authorUrl": "https://github.com/amatya-aditya",
+	"fundingUrl": "https://buymeacoffee.com/amatya_aditya",
+	"isDesktopOnly": false
+}
