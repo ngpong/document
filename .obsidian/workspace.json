@@ -4,11 +4,11 @@
     "type": "split",
     "children": [
       {
-        "id": "96cf262a689a7026",
+        "id": "fdb1824b4345da91",
         "type": "tabs",
         "children": [
           {
-            "id": "d2a9478da518bfef",
+            "id": "e645a9e2a075d81f",
             "type": "leaf",
             "state": {
               "type": "markdown",
@@ -95,7 +95,7 @@
       }
     ],
     "direction": "horizontal",
-    "width": 494.5
+    "width": 422.5
   },
   "right": {
     "id": "3ca9cd71ea6552bb",
@@ -205,16 +205,17 @@
       "workspaces:Manage workspace layouts": false
     }
   },
-  "active": "d2a9478da518bfef",
+  "active": "e645a9e2a075d81f",
   "lastOpenFiles": [
-    "Multiplayer Game Programming.md",
+    "Untitled 1.base",
+    "Untitled.base",
     "C++ Concurrency IN ACTION.md",
+    "Multiplayer Game Programming.md",
     "Sort algorithm -- All in one.md",
     "c_lang.md",
     "cpp_lang.md",
     "DataStructure&Algorithm.md",
     "csapp.md",
-    "Untitled.base",
     "docker.md",
     "How to write shared libries.md",
     "markdown.md",
@@ -253,7 +254,6 @@
     "Git/Git.md",
     "MarkDown/markdown.md",
     "c_Sharp/2019/8_6/迭代器模式.md",
-    "c_Sharp/2019/8_6/Linq.md",
     "attachment/canvas/Untitled 11.canvas",
     "attachment/canvas/asdqwd.canvas",
     "attachment/canvas/Untitled 10.canvas",

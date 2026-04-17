@@ -136,17 +136,17 @@ C++ 标准委员会还发布了并发技术规约，详述了对 C++ 标准提�
 ## Chapter <font color = "red">2</font>: 线程管控
 ### 线程的基本管控 (2.1)
 
-每个 C++ 程序都含有至少一个线程，即运行 main() 的线程，它由 C 运行时(C++ runtime)系统启动。随后，程序就可以发起更多线程，它们以别的函数作为入口(entry point)。这些新线程连同起始线程并发运行。当 main() 返回时，程序就会退出；同样，当入口函数返回时，对应的线程随之终结。
+每个 C++ 程序都含有至少一个线程，即运行 $\text{main()}$ 的线程，它由 C 运行时(C++ runtime)系统启动。随后，程序就可以发起更多线程，它们以别的函数作为入口(entry point)。这些新线程连同起始线程并发运行。当 $\text{main()}$ 返回时，程序就会退出；同样，当入口函数返回时，对应的线程随之终结。
 #### 一、发起线程 (2.1.1)
 
-**线程通过构建 std::thread 对象而启动，该对象指明线程要运行的任务**。最简单的任务就是运行一个普通函数，返回空，也不接收参数。函数在自己的线程上运行，等它一返回，线程即随之终止。复杂任务则是另一个极端，它可以由函数对象(function-object)表示，还接收参数，并且在运行过程中，经由某种消息系统协调，按照指定执行一系列独立操作，只有收到某指示信号(依然经由消息系统接收)时，线程才会停止。
+**线程通过构建 $\text{std::thread}$ 对象而启动，该对象指明线程要运行的任务**。最简单的任务就是运行一个普通函数，返回空，也不接收参数。函数在自己的线程上运行，等它一返回，线程即随之终止。复杂任务则是另一个极端，它可以由函数对象(function-object)表示，还接收参数，并且在运行过程中，经由某种消息系统协调，按照指定执行一系列独立操作，只有收到某指示信号(依然经由消息系统接收)时，线程才会停止。
 
 ```c++
 void do_some_work();
 std::thread my_thread(do_some_work);
 ```
 
-**与 C++ 标准库中的许多类型相同，任何可调用类型(callable-type)都适用于 std::thread**。作为代替，我们可以**设计一个带有函数调用操作符(function call operator)的类**，并将该类的实例传递给 std::thread 的构造函数；此外，我们还能**采用 lambda 表达式**。它是 C++11 的新特性，属于可调用对象，它准许我们编写局部函数，能捕获某些局部变量，又无须另外传递参数。
+**与 C++ 标准库中的许多类型相同，任何可调用类型(callable-type)都适用于 $\text{std::thread}$**。作为代替，我们可以**设计一个带有函数调用操作符(function call operator)的类**，并将该类的实例传递给 $\text{std::thread}$ 的构造函数；此外，我们还能**采用 lambda 表达式**。它是 C++11 的新特性，属于可调用对象，它准许我们编写局部函数，能捕获某些局部变量，又无须另外传递参数。
 
 ```cpp
 class background_task {
@@ -166,18 +166,18 @@ std::thread my_thread([]{
 });
 ```
 
-上面的代码在构造 std::thread 实例时，提供了**函数对象 f 作为参数，它被复制到属于新线程的存储空间中**，并在那里被调用，由新线程执行。故此，副本的行为必须与原本的函数对象等效，否则运行结果可能有违预期——新线程真正执行的是 f 的“拷贝品”，所以你必须保证“拷贝出来的那个对象”跟原来的 f 在语义上是一样能正确工作的；否则你以为线程在用某个状态，实际用到的是另一份状态，结果产生不一致。
+上面的代码在构造 $\text{std::thread}$ 实例时，提供了**函数对象 $f$ 作为参数，它被复制到属于新线程的存储空间中**，并在那里被调用，由新线程执行。故此，副本的行为必须与原本的函数对象等效，否则运行结果可能有违预期——新线程真正执行的是 $f$ 的“拷贝品”，所以你必须保证“拷贝出来的那个对象”跟原来的 $f$ 在语义上是一样能正确工作的；否则你以为线程在用某个状态，实际用到的是另一份状态，结果产生不一致。
 
-**一旦启动了线程，我们就需明确是要等待它结束(与之汇合)，还是任由它独自运行(与之分离)。假如等到 std::thread 对象销毁之际还没决定好，那 std::thread 的析构函数将调用 std::terminate() 终止整个程序**。所以，当务之急是设定新线程，使之正确地汇合或分离，即便有异常抛出也照样如此。**需要明确一点的是，触发异常的机制和 std::thread 所绑定的线程是否结束无关**。假设在对象销毁之际线程已结束，也不意味着线程与 std::thread 之间脱离了绑定。因此在这种情况下，我们要是还没有明确执行汇合或分离一样会引发异常。 ^1ec8d5
+**一旦启动了线程，我们就需明确是要等待它结束(与之汇合)，还是任由它独自运行(与之分离)。假如等到 $\text{std::thread}$ 对象销毁之际还没决定好，那 $\text{std::thread}$ 的析构函数将调用 $\text{std::terminate()}$ 终止整个程序**。所以，当务之急是设定新线程，使之正确地汇合或分离，即便有异常抛出也照样如此。**需要明确一点的是，触发异常的机制和 $\text{std::thread}$ 所绑定的线程是否结束无关**。假设在对象销毁之际线程已结束，也不意味着线程与 $\text{std::thread}$ 之间脱离了绑定。因此在这种情况下，我们要是还没有明确执行汇合或分离一样会引发异常。 ^1ec8d5
 
-如果选择了汇合，当前线程将等待目标线程结束后才可继续执行；**如果选择了分离，如果选择了分离，该操作会切断线程与 std::thread 对象之间的关联，即便分离时新线程还未结束运行，那它将继续运行，甚至在 std::thread 对象销毁很久之后依然运行，它只有最终从线程函数返回时才会结束运行**。
+如果选择了汇合，当前线程将等待目标线程结束后才可继续执行；**如果选择了分离，如果选择了分离，该操作会切断线程与 $\text{std::thread}$ 对象之间的关联，即便分离时新线程还未结束运行，那它将继续运行，甚至在 $\text{std::thread}$ 对象销毁很久之后依然运行，它只有最终从线程函数返回时才会结束运行**。
 
 **假定程序不等待线程结束，那么在线程运行结束前，我们需保证它所访问的外部数据始终正确、有效**。这并非新问题，在单线程代码中，试图访问已销毁的对象同样是未定义的行为。**一种处理方法通常是：令线程函数完全自含(self-contained)，将数据复制到新线程内部，而不是共享数据**。若由可调用对象完成线程函数的功能，那它就会完整地将数据复制到新线程内部，因此原对象即使立刻被销毁也无碍。
 #### 二、等待线程完成 (2.1.2)
 
-**若需等待线程完成，那么可以在与之关联的 std::thread 实例上，通过调用成员函数 join() 实现**；在某些情境下，这种做法可能意义并不大，因为在等待期间，主线程根本未能有效工作。但在现实代码中，原始线程有可能需要完成自己的工作，也有可能发起好几个线程，令它们各自承担实质工作，而原始线程则等待它们全部完成。
+**若需等待线程完成，那么可以在与之关联的 $\text{std::thread}$  实例上，通过调用成员函数 $\text{join()}$ 实现**；在某些情境下，这种做法可能意义并不大，因为在等待期间，主线程根本未能有效工作。但在现实代码中，原始线程有可能需要完成自己的工作，也有可能发起好几个线程，令它们各自承担实质工作，而原始线程则等待它们全部完成。
 
-只要调用了 join()，隶属于该线程的任何存储空间即会因此清除，std::thread 对象遂不再关联到已结束的线程。其中的意义是，对于某个给定的线程，join() 仅能调用一次；**只要 std::thread 对象曾经调用过 join()，线程就不再可汇合，成员函数 joinable() 将返回 false** 。
+只要调用了 $\text{join()}$，隶属于该线程的任何存储空间即会因此清除，$\text{std::thread}$ 对象遂不再关联到已结束的线程。其中的意义是，对于某个给定的线程，$\text{join()}$ 仅能调用一次；**只要** $\text{std::thread}$ **对象曾经调用过 $\text{join()}$，线程就不再可汇合，成员函数 $\text{joinable()}$ 将返回** $\text{false}$ **。
 
 ```cpp
 std::thread t(do_background_work)
@@ -186,7 +186,7 @@ assert(!t.joinable())
 ```
 #### 三、在后台运行线程 (2.1.4)
 
-**调用 std::thread 对象的成员函数 detach()，会令线程在后台运行，遂无法与之直接通信。假若线程被分离，就无法等待它完结，也不可能获得与它关联的 std::thread 对象，因而无法汇合该线程**。然而分离的线程确实仍在后台运行，其归属权和控制权都转移给 C++运行时库，由此保证，一旦线程退出，与之关联的资源都会被正确回收。
+**调用 $\text{std::thread}$ 对象的成员函数 $\text{detach()}$，会令线程在后台运行，遂无法与之直接通信。假若线程被分离，就无法等待它完结，也不可能获得与它关联的 $\text{std::thread}$ 对象，因而无法汇合该线程**。然而分离的线程确实仍在后台运行，其归属权和控制权都转移给 C++运行时库，由此保证，一旦线程退出，与之关联的资源都会被正确回收。
 
 **UNIX 操作系统中，有些进程叫作守护进程(daemon-process)，它们在后台运行且没有对外的用户界面；沿袭这一概念，分离出去的线程常常被称为守护线程(daemon-thread)**。这种线程往往长时间运行。几乎在应用程序的整个生存期内，它们都一直运行，以执行后台任务，如文件系统监控、从对象缓存中清除无用数据项、优化数据结构等。另有一种模式，就是由分离线程执行 “启动后即可自主完成”(a fire-and-forget task) 的任务。
 
@@ -198,7 +198,7 @@ assert(!t.joinable())
 
 ### 向线程函数传递参数 (2.2)
 
-若需向新线程上的函数或可调用对象传递参数，方法相当简单，直接向 std::thread 的构造函数增添更多参数即可。
+若需向新线程上的函数或可调用对象传递参数，方法相当简单，直接向 $\text{std::thread}$ 的构造函数增添更多参数即可。
 
 ```cpp
 void f(int i, const std::string& s);
@@ -209,11 +209,11 @@ std::thread t(f, 3, "hello");
 
 > [!TIP] 
 >
-> 1）std::thread 构造时传参，如果传左值则会拷贝进内部，如果传右值则会移动进内部(通常)。
-> 2）std::thread 内部一定会保存一份参数副本对象，对象类型为传参类型在移除任何限定、引用标识符并完成类型退化(std::decay_t\<T\>)后的结果，由上一步传参使用的值类别去决定拷贝或移动构造得到。
-> 3）**线程启动时，库内部的代码会把参数副本当成 move-only 型别，并以右值的方式传递到入口点**：值类型形参会从内部对象再构造一次(优先调用移动构造)；const&/T&& 形参只做引用绑定不产生拷贝。
+> 1）$\text{std::thread}$ 构造时传参，如果传左值则会拷贝进内部，如果传右值则会移动进内部(通常)。
+> 2）$\text{std::thread}$ 内部一定会保存一份参数副本对象，对象类型为传参类型在移除任何限定、引用标识符并完成类型退化($\text{std::decay\_t<T>}$)后的结果，由上一步传参使用的值类别去决定拷贝或移动构造得到。
+> 3）**线程启动时，库内部的代码会把参数副本当成 move-only 型别，并以右值的方式传递到入口点**：值类型形参会从内部对象再构造一次(优先调用移动构造)；$\text{const\&/T\&\&}$ 形参只做引用绑定不产生拷贝。
 
-**理解 std::thread 处理线程参数传递的工作方式非常重要，错误的使用仍会引起局部变量生存期相关的任何问题**。一个例子是：传递的参数是一个局部且临时的字符数组，此时 std::thread 内部的参数副本则退化为字符指针类型并指向字符数组中的第一个字符；令线程分离，那么极有可能在局部作用域结束后线程函数才开始运行，此时线程函数访问了一个已被销毁的变量(悬空指针)产生了未定义行为。解决该情景的一种方案是，采用某种方式令指针的生存期脱离局部作用域，例如采用 std::string 来包装它：
+**理解 $\text{std::thread}$ 处理线程参数传递的工作方式非常重要，错误的使用仍会引起局部变量生存期相关的任何问题**。一个例子是：传递的参数是一个局部且临时的字符数组，此时 $\text{std::thread}$ 内部的参数副本则退化为字符指针类型并指向字符数组中的第一个字符；令线程分离，那么极有可能在局部作用域结束后线程函数才开始运行，此时线程函数访问了一个已被销毁的变量(悬空指针)产生了未定义行为。解决该情景的一种方案是，采用某种方式令指针的生存期脱离局部作用域，例如采用 $\text{std::string}$ 来包装它：
 
 ```cpp
 void f(int i, const std:string& s);
@@ -226,7 +226,7 @@ void not_oops(int some_param) {
 }
 ```
 
-由于 std::thread 总是以右值的方式传递参数副本至入口，因此线程函数为 T& 类型的形参默认无法绑定。**要想解决这个问题，在传递参数时可以采用 std::ref 加以包装**。std::ref(x) 生成一个临时的 std::reference_wrapper\<T\>，它内部本质上保存的是 T* (指向 x)；这也就意味着，即便 std::thread 内部需要拷贝副本，拷贝的也只是 std::reference_wrapper 而不是 T 。
+由于 $\text{std::thread}$ 总是以右值的方式传递参数副本至入口，因此线程函数为 $\text{T\&}$ 类型的形参默认无法绑定。**要想解决这个问题，在传递参数时可以采用 $\text{std::ref}$ 加以包装**。$\text{std::ref(x)}$ 生成一个临时的 $\text{std::reference\_wrapper<T>}$，它内部本质上保存的是 $\text{T*}$ (指向 $\text{x}$)；这也就意味着，即便 $\text{std::thread}$ 内部需要拷贝副本，拷贝的也只是 $\text{std::reference\_wrapper}$ 而不是 $\text{T}$ 。
 
 ```cpp
 vo1d update_data_For_widget(widget_id w, widget_data &data);
@@ -236,7 +236,7 @@ widget_data data;
 std::thread t(update_data_For_widget, w, std::ref(data));
 ```
 
-一般地，在调用类的非静态成员函数时，编译器会隐式添加一参数。它是所操作对象的地址，用于绑定对象和成员函数，并且位于其他实际参数之前。例如，类 example 具有成员数 func(int x)，而 obj 是该类的对象，则调用 obj.func(2) 等价于调用 example:func(&obj, 2) 。
+一般地，在调用类的非静态成员函数时，编译器会隐式添加一参数。它是所操作对象的地址，用于绑定对象和成员函数，并且位于其他实际参数之前。例如，类 $\text{example}$ 具有成员数 $\text{func(int x)}$，而 $\text{obj}$ 是该类的对象，则调用 $\text{obj.func(2)}$ 等价于调用 $\text{example:func(\&obj, 2)}$ 。
 
 依据这样的特性，**若要将某个类的成员函数设定为线程函数，我们则应传入一个函数指针，指同该成员函数；此外，我们还要给出合适的对象指针，作为该函数的第一个参数；诺要为成员函数添加更多的额外参数，应当从参数序列中第三个位置开始传递。**
 
@@ -250,7 +250,7 @@ X my_x;
 std::thread t(X::do_lengthy_work, &my_x);
 ```
 
-**值得注意的是，要想传递只可移动不可复制(move-only)的型别，若源对象是具名变量，则必须通过调用 std::move 来显式转移**。在 C++ 标准库中含有不少掌握资源的型别一般都拥有此特性：std::unique_ptr 拥有动态对象，std::ifstream 拥有文件句柄。std::thread 亦是其中之一，其每份实例都负责管控一个执行线程。这样的设计是有必要的，保证对于任一特定执行线程，任何时候都只有唯一的 std:thread 对象与之关联，还准许使用者在其对象之间转移线程归属权。
+**值得注意的是，要想传递只可移动不可复制(move-only)的型别，若源对象是具名变量，则必须通过调用 $\text{std::move()}$ 来显式转移**。在 C++ 标准库中含有不少掌握资源的型别一般都拥有此特性：$\text{std::unique\_ptr}$ 拥有动态对象，$\text{std::ifstream}$ 拥有文件句柄。$\text{std::thread}$ 亦是其中之一，其每份实例都负责管控一个执行线程。这样的设计是有必要的，保证对于任一特定执行线程，任何时候都只有唯一的 $\text{std:thread}$ 对象与之关联，还准许使用者在其对象之间转移线程归属权。
 
 ```cpp
 void process_big_object(std::unique_ptr<big_object>);
@@ -276,11 +276,11 @@ t3 = std::move(t2); ◄── "创建线程 t3 -> t2; t2 已失效"
 t1 = std::move(t3); ◄── "该赋值操作会引发 std::terminate() 异常"
 ```
 
-上述例子展示了转移线程归属权的基本工作方式。**这里我们需要重点关注最后一次转移，该操作会引发 std::terminate() 异常，原因在于转移之时 t1 已关联了一个工作线程且仍未分离**。[[#^1ec8d5|2.1.1小节]]已解释过，在 std::thread 对象析构前，我们必须明确：是等待线程完成还是要与之分离。不然，便会导致关联的线程终结。赋值操作也有类似的原则：**只要std::thread对象正管控着一个线程，就不能简单地向它赋新值，否则该线程会因此被遗弃**。
+上述例子展示了转移线程归属权的基本工作方式。**这里我们需要重点关注最后一次转移，该操作会引发 $\text{std::terminate()}$ 异常，原因在于转移之时 $t_1$ 已关联了一个工作线程且仍未分离**。[[#^1ec8d5|2.1.1小节]]已解释过，在 $\text{std::thread}$ 对象析构前，我们必须明确：是等待线程完成还是要与之分离。不然，便会导致关联的线程终结。赋值操作也有类似的原则：**只要 $\text{std::thread}$ 对象正管控着一个线程，就不能简单地向它赋新值，否则该线程会因此被遗弃**。
 
-**std::thread 支持移动语义的另一个好处是，结合 RAII 的方式可以轻松构建出可安全退出的工作线程——scoped_thread**。假设工作线程只能 “绑定死” 在某个实例里，那么到底是谁负责汇聚/分离这个责任就没法安全地转交；一旦责任和实际线程的存活期错位，就容易出严重问题。曾经有一份 C++17 标准的备选提案，主张引人新的类 joining_thread，它与 std::thread 类似，但只要其执行析构函数，线程即能自动汇合，这点与 scoped_thread 非常像。可惜C+标准委员会未能达成共识，结果 C++17 标准没有引人这个类，后来它改名为std::jthread，依然进人了 C++20 标准的议程(现已被正式纳人C++20标准)。
+**$\text{std::thread}$ 支持移动语义的另一个好处是，结合 RAII 的方式可以轻松构建出可安全退出的工作线程——$\text{scoped\_thread}$**。假设工作线程只能 “绑定死” 在某个实例里，那么到底是谁负责汇聚/分离这个责任就没法安全地转交；一旦责任和实际线程的存活期错位，就容易出严重问题。曾经有一份 C++17 标准的备选提案，主张引人新的类 $\text{joining\_thread}$，它与 $\text{std::thread}$ 类似，但只要其执行析构函数，线程即能自动汇合，这点与 $\text{scoped\_thread}$ 非常像。可惜 C++ 标准委员会未能达成共识，结果 C++17 标准没有引人这个类，后来它改名为 $\text{std::jthread}$，依然进人了 C++20 标准的议程(现已被正式纳人 C++20 标准)。
 
-此外，**标准库中任何同样知悉移动意图(即 move-aware，指容器能够把元素移动或复制到其内部，特别是可以正确处理只移动对象，并且能在容器内部进行移动操作)的容器都可以轻松装载 std::thread 对象，例如符合新标准的 std::vector**；因此我们可以写出下列代码，生成多个线程，然后等待它们完成运行。
+此外，**标准库中任何同样知悉移动意图(即 move-aware，指容器能够把元素移动或复制到其内部，特别是可以正确处理只移动对象，并且能在容器内部进行移动操作)的容器都可以轻松装载 $\text{std::thread}$ 对象，例如符合新标准的 $\text{std::vector}$**；因此我们可以写出下列代码，生成多个线程，然后等待它们完成运行。
 
 ```cpp
 void do_work(unsigned id);
@@ -294,21 +294,21 @@ void f() {
 }
 ```
 
-若要运用多线程切分某算法的运算任务，往往要求采取以上方式；必须等所有线程完成运行后，运行流程才能返回到调用者。上述代码结构简单，说明了每个线程上的任务都是自含的(self-contained，指线程内数据齐全，可独立完成子任务，而不依赖外部数据)，且它们操作共享数据的结果单纯地由副作用产生。假如 f() 需要向其调用者返回值，而它又依赖于所有线程的运算结果，那么，只有等到全部线程终止，我们才能核查共享数据，以推算出该返回值。
+若要运用多线程切分某算法的运算任务，往往要求采取以上方式；必须等所有线程完成运行后，运行流程才能返回到调用者。上述代码结构简单，说明了每个线程上的任务都是自含的(self-contained，指线程内数据齐全，可独立完成子任务，而不依赖外部数据)，且它们操作共享数据的结果单纯地由副作用产生。假如 $\text{f()}$ 需要向其调用者返回值，而它又依赖于所有线程的运算结果，那么，只有等到全部线程终止，我们才能核查共享数据，以推算出该返回值。
 
 ### 在运行时选择线程数量 (2.4)
 
-**借用 C++ 标准库的 std::thread::hardware_concurrency() 函数，它的返回值是一个指标，表示程序在各次运行中可真正并发的线程数量。在多核系统上，该值可能就是CPU的核芯数量。这仅仅是一个指标，若信息无法获取，该函数则可能返回 0**。虽然如此，若要用多线程分解完整的任务，该值仍不失为有用的指标：硬件支持的线程数量有限，运行的线程数量不应超出该限度(超出的情况称为线程过饱和，即 oversubscrption)，因为线程越多，上下文切换越频繁，导致性能降低。
+**借用 C++ 标准库的 $\text{std::thread::hardware\_concurrency()}$ 函数，它的返回值是一个指标，表示程序在各次运行中可真正并发的线程数量。在多核系统上，该值可能就是 CPU 的核心数量。这仅仅是一个指标，若信息无法获取，该函数则可能返回 0**。虽然如此，若要用多线程分解完整的任务，该值仍不失为有用的指标：硬件支持的线程数量有限，运行的线程数量不应超出该限度(超出的情况称为线程过饱和，即 oversubscrption)，因为线程越多，上下文切换越频繁，导致性能降低。
 
 ### 识别线程 (2.5)
 
-**线程 ID 所属型别是 std::thread::id，它有两种获取方法。首先，在与线程关联的 std::thread 对象上调用成员函数 get_id()，即可得到该线程的 ID。如果 std::thread 对象没有关联任何执行线程，调用 get_id() 则会返回一个按默认构造方式生成 std::thread::id 对象，表示 “线程不存在”。其次，当前线程的 ID 可以通过调用 std::this_thread::get_id() 获得**。
+**线程 ID 所属型别是 $\text{std::thread::id}$，它有两种获取方法。首先，在与线程关联的 $\text{std::thread}$ 对象上调用成员函数 $\text{get\_id()}$，即可得到该线程的 ID。如果 $\text{std::thread}$ 对象没有关联任何执行线程，调用 $\text{get\_id()}$ 则会返回一个按默认构造方式生成 $\text{std::thread::id}$ 对象，表示 “线程不存在”。其次，当前线程的 ID 可以通过调用 $\text{std::this\_thread::get\_id()}$ 获得**。
 
-std::thread::id 型别的对象作为线程 ID，可随意进行复制操作或比较运算。如果两个 std::thread::id 型别的对象相等，则它们表示相同的线程，或者它们的值都表示 “线程不存在”；反之表示不同的线程，或者当中一个表示某个线程，而另一个表示 "线程不存在"。**C++ 标准库容许我们随意判断两个线程 ID 是否相同，没有任何限制；std::thread::id 型别具备全套完整的比较运算符，比较运算符就所有不相等的值确立了全序(total order)关系**，它们的行为与我们的预期相符：若 a < b 且 b < c，则有 a < c，以此类推。
+$\text{std::thread::id}$ 型别的对象作为线程 ID，可随意进行复制操作或比较运算。如果两个 $\text{std::thread::id}$ 型别的对象相等，则它们表示相同的线程，或者它们的值都表示 “线程不存在”；反之表示不同的线程，或者当中一个表示某个线程，而另一个表示 "线程不存在"。**C++ 标准库容许我们随意判断两个线程 ID 是否相同，没有任何限制；$\text{std::thread::id}$ 型别具备全套完整的比较运算符，比较运算符就所有不相等的值确立了全序(total order)关系**，它们的行为与我们的预期相符：若 a < b 且 b < c，则有 a < c，以此类推。
 
-这使得**它们可以用作关联容器(associative container)的键值，或用于排序。标准库的 hash 模板同样支持 std::hash<std::thread::id> 的特化，因此 std::thread::id 的值也可以用作新标准的无序关联容器(unordered associative container)的键值**。
+这使得**它们可以用作关联容器(associative container)的键值，或用于排序。标准库的 $\text{std::hash<>}$ 模板同样支持 $\text{std::hash<std::thread::id>}$ 的特化，因此 $\text{std::thread::id}$ 的值也可以用作新标准的无序关联容器(unordered associative container)的键值**。
 
-绝大多数情况下，std::thread::id 足以作为通用 ID。除非我们把线程 ID 另作他用，令它的值含有其他语义(如充当数组索引)，否则没必要使用别的标识方法。我们甚至可以把 std::thread::id 的实例写入到标准输出流：
+绝大多数情况下，$\text{std::thread::id}$ 足以作为通用 ID。除非我们把线程 ID 另作他用，令它的值含有其他语义(如充当数组索引)，否则没必要使用别的标识方法。我们甚至可以把 $\text{std::thread::id}$ 的实例写入到标准输出流：
 
 ```cpp
 std::cout << std::this_thread::get_id();
@@ -477,26 +477,675 @@ void swap(X& lhs, X& rhs) {
 **假定我们需要同时获取多个锁，那么 std::lock() 函数和 std::scoped_lock<> 模板即可帮助防范死锁；但若代码分别获取各个锁(在相同函数的不同位置、不同函数、不同作用域内分开为互斥加锁的情况)，它们就鞭长莫及了**。在这种情况下，我们身为开发人员，唯有依靠经验力求防范死锁。知易行难，死锁是最棘手的多线程代码问题之一，绝大多数情形中，纵然一切都运作正常，死锁也往往无法预测。
 #### 防范死锁的补充准则 (3.2.5)
 
-**虽然死锁的最常见诱因之一是锁操作，但即使没有牵涉锁，也会发生死锁现象。假定有两个线程，各自关联了 std::thread 实例，若它们同时在对方的 std::thread 实例上调用 join()，就能制造出死锁现象却不涉及锁操作**。如果线程甲正等待线程乙完成某一动作，同时线程乙却在等待线程甲完成某一动作，便会构成简单的循环等待，并且线程数目不限于两个：就算是 3 个或更多线程，照样会引起死锁。**防范死锁的准则最终可归纳成一个思想:只要另一线程有可能正在等待当前线程，那么当前线程千万不能反过来等待它。下列准则的细分条目给出了各种方法，用于判别和排除其他线程是否正在等待当前线程**。
-
-1）避免嵌套锁
+**虽然死锁的最常见诱因之一是锁操作，但即使没有牵涉锁，也会发生死锁现象。假定有两个线程，各自关联了 std::thread 实例，若它们同时在对方的 std::thread 实例上调用 join()，就能制造出死锁现象却不涉及锁操作**。如果线程 A 正等待线程 B 完成某一动作，同时线程 B 却在等待线程 A 完成某一动作，便会构成简单的循环等待，并且线程数目不限于两个：就算是 3 个或更多线程，照样会引起死锁。**防范死锁的准则最终可归纳成一个思想:只要另一线程有可能正在等待当前线程，那么当前线程千万不能反过来等待它。下列准则的细分条目给出了各种方法，用于判别和排除其他线程是否正在等待当前线程**。
+###### 1）避免嵌套锁
 
 **假如已经持有锁，就不要试图获取第二个锁。若能恪守这点，每个线程便最多只能持有唯一一个锁，仅锁的使用本身不可能导致死锁**。即便如此仍可能存在引起死锁的场景，譬如，多个线程彼此等待。但**同时操作多个互斥很可能就是最常见的死锁诱因，因此万一确有需要获取多个锁需求，我们应采用 std::lock() 函数，借单独的调用动作一次获取全部锁来避免死锁**。
-
-2）一旦持有锁，就须避免调用由用户提供的程序接口
+###### 2）一旦持有锁，就须避免调用由用户提供的程序接口
 
 这是上一条准则的延伸。**若程序接口由用户自行实现，则我们无从得知它到底会做什么，它可能会随意操作，包括试图获取锁。一旦我们已经持锁，若再调用由用户提供的程序接口，而它恰好也要获取锁，那便违反了避免嵌套锁的准则，可能发生死锁**。
 
 显然，遵守此条规则在现实环境下显得过于苛刻，因此，我们仍需要更多的准则作为补充。
+###### 3）依从固定顺序获取锁
 
-3）依从固定顺序获取锁
+**如果多个锁是绝对必要的，却无法通过 std::lock()在一步操作中全部获取，我们只能退而求其次，在每个线程内部都依从固定顺序获取这些锁**。在[[#^5cec1a|3.2.4节]]已经提及，若在两个互斥上获取锁，则有办法防范死锁：关键是，事先规定好加锁顺序，令所有线程都依从。
 
-如果多个锁是绝对必要的，却无法通过 std::lock()在一步操作中全部获取，我们只能退而求其次，在每个线程内部都依从固定顺序获取这些锁。在[[#^5cec1a|3.2.4节]]已经提及，若在两个互斥上获取锁，则有办法防范死锁：关键是，事先规定好加锁顺序，令所有线程都依从。
+我们可以依据此准则改造[[#线程间共享数据的问题 (3.1)|3.1节]]中所提及的双向链表，以实现**链式交接锁(hand-over-hand locking/lock coupling)的并发访问方式**：给每个节点都配备互斥来保护链表。因此，线程为了访问链表，须对涉及的每个节点加锁。就执行删除操作的线程而言，它必须在 3 个节点上获取锁，即要被删除的目标节点和两侧的相邻节点，因为它们全都会在不同程度上被改动。类似地，若要遍历链表，线程必须持有当前节点的锁，同时在后续节点上获取锁，从而确保前向指针不被改动。一旦获取了后续节点上的锁，当前节点的锁便再无必要，遂可释放。
 
+上述加锁方式很像步行过程中双腿交替迈进。**要注意的是，节点必须依从相同的锁定顺序以预防死锁：假如两个线程从相反方向遍历链表，并采用交替前进的加锁方式，它们就会在途中互相死锁。为解决这一问题，我们还需规定链表的遍历方向，以禁止逆序访问为代价而防范可能产生的死锁问题**。
 
+另一种遵循此准则的实现方式则为按层级加锁(本书对此方案单独划分了一个条目)。锁的层级划分就是按特定方式规定加锁次序，在运行期据此查验加锁操作是否遵从预设规则。按照构思，我们把应用程序分层，并且明确每个互斥位于哪个层级。**若某线程已对低层级互斥加锁，则不准它再对高层级互斥加锁**。具体做法是将层级的编号赋予对应层级应用程序上的互斥，并记录各线程分别锁定了哪些互斥。
 
-4）将准则推广到锁操作以外
+层级互斥之间不可能发生死锁，因为互斥自身已经被强制限定了加锁次序。只要两个层级锁都位于相同层级，我们便无法一并持有：如果两把锁被设成同一个层级号，那你就没法建立严格的先后顺序——实现通常会直接禁止同时持有它们；否则就可能绕开规则，重新引入死锁风险。若将层级锁应用于前文交替前进的加锁策略，那么链表中每个互斥的层级须低于其前驱节点互斥的层级。可是，这种方式在某些情况下并不可行，考虑链表序列可能产生修改的情况，层级关系难以维持。
+###### 4）将准则推广到锁操作以外
 
+本小节开始就提到过，死锁现象并不单单因加锁操作而发生，任何同步机制导致的循环等待都会导致死锁出现。因此也值得为那些情况推广上述准则。譬如，我们应尽可能避免获取嵌套锁；若当前线程持有某个锁，却又同时等待别的线程，这便是坏的情况，因为万一后者恰好也需获取锁，反而只能等该锁被释放才能继续运行。类似地，如果要等待线程，那就值得针对线程规定层级，使得每个线程仅等待层级更低的线程。有一种简单方法可实现这种机制:让同一个函数启动全部线程，且汇合工作也由之负责。
+#### 运用 std::unique_lock<> 灵活加锁 (3.2.6)
 
-#### 运用 std::unique_lock<> 灵活加锁
+**类模板 std::unique_lock\<\> 放宽了不变量的成立条件，因此它相较 std::lock_guard\<\> 更灵活一些。std::unique_lock 对象不一定始终占有与之关联的互斥**。首先，其构造函数接收第二个参数：我们可以**传入 std::adopt_lock 实例，借此指明 std::unique_lock 对象管理互斥上的锁；也可以传入 std::defer_lock 实例，从而使互斥在完成构造时处于无锁状态，等以后有需要时才在 std::unique_lock 对象(不是互斥对象)上调用 lock() 而获取锁，或把 std:unique_lock 对象交给 std::lock() 函数加锁**。
+
+位于[[#死锁：问题和解决办法 (3.2.4)|3.2.4小节]]处的示例代码可以轻松采用它来改造成下例所示的代码，两份示例的行数相同且功能等效。仅有一处小差别：**std:.unique_lock 占用更多的空间，也比 std::lock_guard 略慢。但 std::unique_lock 对象可以不占有关联的互斥，具备这份灵活性需要付出代价——需要存储并且更新互斥信息。**
+
+```cpp
+class some_big_object;
+void swap(some_big_object& lhs, some_big_object& rhs);
+class X {
+private:
+  some_big_object some_detail;
+  std::mutex m;
+public:
+  X(const some_big_object& sd): some_detail(sd) {
+  }
+  friend void swap(X& lhs, X& rhs) {
+    if (&lhs == &rhs) {
+      return;
+    }
+    std::unique_lock lock_a(lhs.m, std::defer_lock);
+    std::unique_lock lock_b(rhs.m, std::defer_lock);
+    std::lock(lock_a, lock_b); ◄── "此处才会对互斥加锁"
+    swap(lhs.some_detail, rhs.some_detail);
+  }
+};
+```
+
+std::unique_lock 类十分灵活，允许它的实例在被销毁前解锁。其成员函数 unlock() 负责解锁操作，这与互斥一致。这就意味着，在执行流程的任何特定分支上，若某个锁显然没必要继续持有，我们则可解锁。**这对应用程序的性能颇为重要：在所需范围之外持锁将使性能下降，因为如果有其他线程需要加锁，就会被迫毫无必要地延长等待时间，导致运行受阻**。
+
+**由于 std::unique_lock 类具有成员函数 lock()、try_lock() 和 unlock()，所以它的实例得以传给 std::lock() 函数。std::unique_lock 实例在底层与目标互斥关联，此互斥也具备这 3 个同名的成员函数，因此上述函数调用转由它们实际执行**。std::unique_lock 实例还含有一个内部标志，亦随着这些函数的执行而更新，以表明关联的互斥目前是否正被该类的实例占据。这一标志必须存在，作用是保证析构函数正确调用 unlock()。
+
+**上述标志需要占用存储空间，故 std::unique_lock 对象的 “体积” 往往大于 std::lock_guard 对象的。并且，由于该标志必须适时更新或检查，因此也会导致轻微的性能损失**。若条件允许，最好还是采用 C++17 所提供的变参模板类 std::scoped_lock，除非我们必须采用 std::unique_lock 类进行某些操作，如转移锁的归属权。
+#### 在不同作用域之间转移互斥归属权 (3.2.7)
+
+std::unique_lock 属于可移动却不可复制的型别，其实例不占有与之关联的互斥。所以随着其实例的转移，互斥的归属权可以在多个 std::unique_lock 实例之间转移。转移会在某些情况下自动发生，譬如从函数返回实例时，但我们须针对别的情形显式调用 std::move()。本质上，这取决于移动数据的来源的值类别。
+
+转移有一种用途：准许调用函数内部预先锁定住互斥，对共享数据做一些前置准备。然后在调用函数返回时把互斥的归属权转移给函数调用者，好让他在同一个锁的保护下继续衍生其他操作。
+
+```cpp
+std::unique_lock<std::mutex> get_lock() {
+  extern std::mutex some_mutex;
+  std::unique_lock lk(some_mutex);
+  prepare_data();
+  return lk;
+}
+void process_data() {
+  std::unique_lock lk(get_lock());
+  do_something(); 
+}
+```
+
+上述模式通常会在两种情形中使用：**互斥加锁的时机取决于程序的当前状态；或者，某函数负责执行加锁操作并返回 std::unique_lock 对象，而互斥加锁时机则由传入的参数决定**。通道(gateway)类是一种利用锁转移的具体形式，std::unique_lock 的角色是其数据成员，用于保证只有正确加锁才能够访问受保护数据，而不再充当函数的返回值。这样，所有数据必须通过通道类访间：若想访问数据，则需先取得通道类的实例(由函数调用返回，如上例中的 get_lock() )，再借它执行加锁操作，然后通过通道对象的成员函数才得以访问数据。我们在访问完成后销毁通道对象，锁便随之释放，别的线程遂可以重新访问受保护的数据。这类通道对象几乎是可移动的(只有这样，函数才有可能向外转移归属权)，因此锁对象作为其数据成员也必须是可移动的。
+
+要理解这个模式，关键点在于，它不是在函数里加锁然后返回数据，而是把锁的所有权(ownership)交给调用者——调用者拿到一个对象，这个对象内部持有锁，所以调用者在对象存活期间就一直是持锁者。
+#### 按适合的粒度加锁 (3.2.8)
+
+**锁粒度，该术语描述一个锁所保护的数据量**，但它没有严格的实质定义。粒度精细的锁保护少量数据，而粒度粗大的锁保护大量数据。锁操作有两个要点：**一是选择足够粗大的锁粒度，确保目标数据受到保护；二是限制范围，务求只在必要的操作过程中持锁，确保不会影响并行的性能**。
+
+**若只用单独一个互斥保护整个数据结构，不但很可能加剧锁的争夺，还将难以缩短持锁时间**。假设某项操作需对同一个互斥全程加锁，当中步骤越多，则持锁时间越久。这是一种双重损失，恰恰加倍促使我们尽可能改用粒度精细的锁，针对数据结构不同的访问情景采取不同层级的保护措施。
+
+**加锁时选用恰当的粒度，不仅事关锁定数据量的大小，还牵涉持锁时间以及持锁期间能执行什么操作。一般地，若要执行某项操作，那我们应该只在所需的最短时间内持锁**。换言之，除非绝对必要，否则不得在持锁期间进行耗时的操作，如等待 I/O 完成或获取另一个锁。**只要条件允许，我们仅仅在访问共享数据期间才锁住互斥，让数据处理尽可能不用锁保护**。
+
+### 保护共享数据的其他工具 (3.3)
+
+#### 在初始化过程中保护共享数据 (3.3.1)
+
+一种格外极端却特别常见的情况是，为了并发访问，共享数据仅需在初始化过程中受到保护，之后再也无须进行显式的同步操作。这可能是因为共享数据一旦创建就处于只读状态，原本可能发生的同步问题遂不复存在；也可能是因为后续操作已为共享数据施加了必要的隐式保护。
+
+假设我们需要某个共享数据，而它创建起来开销不菲。因为创建它可能需要建立数据库连接或分配大量内存，所以等到必要时才真正着手创建，这种方式称为延迟初始化(lazy initialization)。为了使得初始化过程在并发环境下可被安全的执行，一种简单的做法是使用锁包装起来，令互斥覆盖掉整个初始化的过程。但这又带来新的问题，任何线程在执行这个函数时都被迫降级为循序运行，无法最大化利用并发带来的优势。
+
+为改进这一问题，许多人做了尝试。其中包括实现了 “大名鼎鼎” 的双重检验锁定模式(double-checked locking pattern)，如下例所示：
+
+```cpp
+void undefined_behaviour_with_double_checked_locking() {
+  if (!resource_ptr) { ◄── ①
+    std::lock_guard lk(resource_mutex);
+    if(!resource_ptr) { ◄── ②
+      resource_ptr.reset(new some_resource); ◄── ③
+    }
+  }
+  resource_ptr->do_something(); ◄── ④
+}
+```
+
+遗憾的是，这种新的模式饱受诟病，因为它有可能诱发恶性条件竞争，问题的根源是：**当前线程在锁保护范围外读取指针①，而对方线程却可能先获取锁，顺利进入锁保护范围内执行写操作③，此时，读写操作由于指令乱序、多核缓存等等各种原因(第五章会详细介绍)没有同步，产生了条件竞争，既涉及指针本身，还涉及其指向的对象。尽管当前线程能够看见其他线程写人指针，却有可能无视新实例的创建③**，结果导致使用了未正确初始化的实例调用 do_something() 函数④。C++ 标准将此例定义为数据竞争(data-race)，是条件竞争的一种，其将导致未定义行为。
+
+为解决以上问题，在C++标准库中提供了 std::once_flag 类和 std::call_once() 函数，以专门处理该情况。**要想调用 std::call_once() 函数，需提供一份 std::once_flag 实例与初始化函数对象；在传递函数对象的部分，签名设计与 std::thread 保持一致。这也就意味着，我们即可以传递任何可调用类型，还支持在后续形参中传递函数对象的调用参数**。
+
+std::call_once() 函数提供了这样的一种保证：**在同一时刻，任意线程在调用该函数时如果都持有相同的 std::once_flag 实例，则初始化函数对象仅会有一个线程来完成，且在函数退出前其他线程被阻塞等待。一旦初始化函数对象被标记为已完成，则下一次调用时则无副作用产生，前提仍是保有相同的 std::once_flag 实例**。不难看出，要实现这样的机制重度依赖于 std::once_flag 来完成。必要的同步数据则由 std::once_flag 实例存储，每个实例对应一次不同的初始化函数调用。值得一提的是，**std::once_flag 实例既不可复制也不可移动，这与 std::mutex 保持一致**。相比显式使用互斥，std::call_once() 函数的额外开销往往更低，特别是初始化已完成的情况下，如果功能符合需求就应优先使用。
+
+```cpp
+class X {
+private:
+  connection_info connection_details;
+  connection_handle connection;
+  std::once_flag connection_init_flag;
+  void open_connection() {
+    connection = connection_manager.open(connection_details);
+  }
+public:
+  void send_data(const data_packet& data) {
+    std::call_once(connection_init_flag, &X::open_connection, this);
+    connection.send_data(data);
+  }
+  data_packet receive_data() {
+    std::call_once(connection_init_flag, &X::open_connection, this);
+    return connection.receive_data ();
+  }
+};
+``` 
+
+如果把局部变量声明成静态数据，那样便有可能让初始化过程出现条件竞争。**根据 C++ 标准规定，只要控制流程第一次遇到静态数据的声明语句，变量即进行初始化**。若多个线程同时调用同一函数，而它含有静态数据，则任意线程均可能首先到达其声明处，这就形成了条件竞争的隐患。C++11 标准发布之前，许多编译器都未能在实践中正确处理该条件竞争。其原因有可能是众多线程均认定自己是第一个，都试图初始化变量；也有可能是某线程上正在进行变量的初始化，但尚未完成，而别的线程却试图使用它。**C++11 解决了这个问题，规定初始化只会在某一线程上单独发生，在初始化完成之前，其他线程不会越过静态数据的声明而继续运行。于是，这使得条件竞争原来导致的问题变为，初始化应当由哪个线程具体执行**。某些类的代码只需用到唯一一个全局实例，这种情形可用以下方法代替 std::call_once() ：
+
+```cpp
+class my_class;
+my_class& get_my_class_instance() {
+  static my_class instance;
+  return instance;
+}
+```
+#### 保护甚少更新的数据结构 (3.3.2)
+
+考虑一种具有两种不同使用方式互斥的数据结构，允许单独一个 “写线程” 进行完全排他的访问，也允许多个 “读线程”  共享数据或并发访问；若写线程对其进行更新操作，则并发访问从开始到结束完全排他，及至更新完成，方可重新被多线程并发访问。若采用 std::mutex 保护数据结构，则过于严苛，原因是即便没发生改动，它照样会禁止并发访问。
+
+C++17 标准库中提供的两种新的互斥：std::shared_mutex 和 std::shared_timed_mutex 可用于解决上述场景的问题；二者的区别在于，后者支持更多操作。若无须进行额外操作则应选用 std::shared_mutex，其在某些平台上可能会带来性能增益。**使用 std::shared_mutex 的实例施加同步操作时，写线程更新操作可用 std::lock_guard<std::shared_mutex> 和 std::unique_lock<std::shared_mutex> 锁，代替对应的 std::mutex 特化；它们与 std::mutex 一样，都保证了访问的排他性质。对于那些具有共享数据并发访问的读线程，可以另行改用共享锁 std::shared lock<std::shared mutex> 实现共享访问。**
+
+C++14 引入了共享锁的类模板，其工作原理是 RAII 过程，使用方式则与 std::unique_lock 相同，只不过多个线程能够同时锁住同一个 std::shared_mutex。**共享锁仅有一个限制，即假设它已被某些线程所持有，若别的线程试图获取排他锁，就会发生阻塞，直到那些线程全都释放该共享锁。反之，如果任一线程持有排他锁，那么其他线程全都无法获取共享锁或排他锁，直到持锁线程将排他锁释放为止**。
+
+```cpp
+class dns_entry;
+class dns_cache {
+private:
+  std::map<std::string, dns_entry> entries;
+  mutable std::shared_mutex entry_mutex;
+public:
+  dns_entry find_entry(const std::string& domain) const {
+    std::shared_lock lk(entry_mutex);
+    const auto it = entries.find(domain);
+    return (it == entries.end()) ? dns_entry() : it->second;
+  }
+  
+  void update_or_add_entry(const std::string& domain, const dns_entry& dns_details) {
+    std::lock_guard lk(entry_mutex);
+    entries[domain] = dns_details;
+  }
+};
+```
+
+上述代码示例中，find_entry() 采用 std::shared_lock 实例保护共享的、只读的访问，所以多个线程得以同时调用 find_entry()。同时，当缓存表需要更新时，update_or_add_entry() 采用 std::lock_guard 实例进行排他访问；如果其他线程同时调用 update_or_add_entry()，那么它们的更新操作将被阻塞，而且调用 find_entry() 的线程也会被阻塞。
+#### 递归加锁 (3.3.3)
+
+假如线程已经持有某个 std::mutex 实例，试图再次对其重新加锁就会出错，将导致未定义行为。但在某些场景中，确有需要让线程在同一互斥上多次重复加锁，而无须解锁。C++ 标准库为此提供了 std::recursive_mutex，其工作方式与 std::mutex 相似，不同之处是，其允许同一线程对某互斥的同一实例多次加锁。我们必须先释放全部的锁，才可以让另一个线程锁住该互斥。例如，若我们对它调用了 3 次 lock()，就必须调用 3 次 unlock()。只要正确地使用 std::lock_guard<std::recursive_mutex> 和 std::unique_lock<std::recursive_mutex>，它们便会处理好递归锁的余下细节。
+
+若要设计一个类以支持多线程并发访问，它就需包含互斥来保护数据成员，递归互斥常常用于这种情形。每个公有函数都需先锁住互斥，然后才进行操作，最后解锁互斥。但有时在某些操作过程中，公有函数需要调用另一公有函数。在这种情况下，后者将同样试图锁住互斥，如果采用 std::mutex 便会导致未定义行为。有一种 “快刀斩乱麻” 的解决方法：用递归互斥代替普通互斥。这容许第二个公有函数成功地对递归互斥加锁，因此函数可以顺利地执行下去。
+
+**可是不推荐上述方法，因为这有可能放纵思维而导致拙劣的设计。具体而言，当以上类型持有锁的时候，其不变量往往会被破坏。也就是说，即便不变量被破坏，只要第二个成员函数被调用，它依然必须工作**。我们通常可以采取更好的方法：根据这两个公有函数的共同部分，提取出一个新的私有函数，新函数由这两个公有函数调用，而它假定互斥已经被锁住，遂无须重复加锁。
+
+## Chapter <font color = "red">4</font>: 并发操作的同步
+### 等待事件或等待其他条件 (4.1)
+
+以生产者—消费者模式的 $A, B$ 两线程为例，若数据要先进行前期处理，才可以开始正式操作，那么线程 $A$ 则需等待线程 $B$ 完成并且触发事件，其中最基本的方式是条件变量。按照 “条件变量” 的概念，若条件变量与某一事件或某一条件关联，一个或多个线程就能以其为依托，等待条件成立。当某线程判定条件成立时，就通过该条件变量，知会所有等待的线程，唤醒它们继续处理。
+#### 凭借条件变量等待条件成立 (4.1.1)
+
+C++ 标准库提供了条件变量的两种实现：$\text{std::condition\_variable}$ 和 $\text{std::condition\_variable\_any}$；两者都需配合互斥，方能提供妥当的同步操作。$\text{std::condition\_variable}$ 仅限于与 $\text{std::mutex}$ 一起使用；然而只要某一类型符合成为互斥的最低标准，足以充当互斥，$\text{std::condition\_variable\_any}$ 即可与之配合使用，因此它的后缀是 “$\text{any}$”。由于 $\text{std::condition\_variable\_any}$ 更加通用，它可能产生额外开销，涉及其性能、自身的体积或系统资源等，因此 $\text{std::condition\_variable}$ 应予优先采用，除非有必要令程序更灵活。
+
+使得条件变量能正常工作需依赖于一对通知与等待的函数；假定任意线程都持有同一份 $\text{std::condition\_variable}$ 实例。作为等待方，线程调用实例的 $\text{wait()}$ 函数，传入锁对象和一个谓词，后者用于表达需要等待成立的条件。一但 “等待函数” 被调用，控制流则被阻塞，直至显式通知亦或是等待谓词成立；作为通知方，线程调用实例的 $\text{notify\_once/all()}$ 函数，用于通知任何处于等待状态的休眠线程恢复执行。
+
+相比较来说，通知方所做的工作要简单的多，$\text{std::condition\_variable::notify\_once/all}$ 并不绑定任何形参，它的作用仅仅只是唤醒一个/全部正处于休眠状态的线程，不参与任何其他复杂的情况。**反观 $\textbf{std::condition\_variable::wait}$ 函数，在调用时则需传递一个 $\textbf{std::unique\_lock}$ 锁对象和一个用作谓词判断的函数对象**，这样复杂的签名要求与其内部的实现机制息息相关。**当 $\textbf{wait()}$ 被调用时会立即开始做一次谓词判断：谓词成立则继续锁定互斥，控制流携带锁继续向下执行；否则，解锁互斥，使得线程进入休眠等待，直至被另一个线程显式通知唤醒，或者通过内部某种机制定期检查唤醒。当休眠的线程一旦被唤醒便重新锁定互斥，重复执行一次和之前一样的处理。**
+
+**注意的是，这种定期检查唤醒处理机制称之为伪唤睡(spunous wake)，按照标准的规定，伪唤醒出现的数量和频率都不固定，故此，若谓词函数有副作用，则不建议选取它来作为查验条件。**
+
+```cpp
+std::mutex mut;
+std::queue<data_chunk> data_queue;
+std::condition_variable data_cond;
+
+void data_preparation_thread() { // 由线程B运行
+  while(more_data_to_prepare()) {
+    const data_chunk data = prepare_data();
+    {
+      std::lock_guard<std::mutex> lk(mut);
+      data_queue.push(data);
+    }
+    data_cond.notify_one();
+  }
+}
+
+void data_processing_thread() { // 由线程A运行
+  while(true) {
+    std::unique_lock<std::mutex> lk(mut);
+    data_cond.wait(lk, []{ return !data_queue.empty(); });
+    data_chunk data = data_queue.front();
+    data_queue.pop();
+    lk.unlock();
+    process(data);
+    if(is_last_chunk(data))
+      break;
+  }
+}
+```
+
+### 使用 future 等待一次性事件发生 (4.2)
+
+假定，某个线程按计划仅仅等待一次，只要条件成立一次，它就不再理会条件变量。条件变量未必是这种同步模式的最佳选择。若我们所等待的条件需要判定某份数据是否可用，上述论断就非常正确。
+
+C++ 标准程序库使用 $\text{future}$ 来模拟这类一次性事件：**若线程需等待某个特定的一次性事件发生，则会以恰当的方式取得一个 $\textbf{future}$，它代表目标事件；接着，该线程就能一边执行其他任务，一边在 $\textbf{future}$ 上等待；同时，它以短暂的间隔反复查验目标事件是否已经发生**。这个线程也可以转换运行模式，先不等目标事件发生，直接暂缓当前任务，而切换到别的任务，及至必要时，才回头等待 $\text{future}$ 准备就绪。**$\text{future}$ 可能与数据关联，也可能未关联。一旦目标事件发生，其 $\textbf{future}$ 即进入就绪状态，无法重置。**
+
+C++ 标准程序库有两种 $\text{future}$，分别由两个类模板实现：$\text{std::future<>}$ 和 $\text{std::shared\_future<>}$。**同一事件仅仅允许关联唯一一个 $\textbf{std::future}$ 实例（即不可复制），但可以关联多个 $\textbf{std::shared\_future}$  实例**。**只要目标事件发生，与后者关联的所有实例就会同时就绪，并且它们全都可以访问与该目标事件关联的任何数据（模板参数就是关联数据的类型）。如果没有关联数据，我们应使用特化的模板 $\textbf{std::future<void>}$ 和 $\textbf{std::shared\_future<void>}$**。
+
+虽然 $\text{future}$ 能用于线程间通信，但是 $\text{future}$ 对象本身不提供同步访问。**若多个线程需访问同一个 $\textbf{future}$ 对象，必须显式使用互斥或其他同步方式，否则由于数据竞争而产生未定义行为**。不过，**一个 $\textbf{std::shared\_future<>}$ 对象允许派生出多个副本，这些副本都指向同一个异步结果，由多个线程分别独占，它们可访问属于自已的那个副本而无须互相同步**。
+#### 从后台任务返回值 (4.2.1)
+
+最基本的一次性事件是，置于后台运行的计算任务完成，得出结果。回顾[[#Chapter <font color = "red">2 线程管控|第 2 章]]可发现，$\text{std::thread}$ 类型并未提供直接回传结果的方法，使得不得不手动编码解决这一问题，因此，函数模板 $\text{std::async()}$ 应运而生。
+
+只要我们并不急需线程运算的值，就可以使用 $\text{std::async()}$ 按异步方式启动任务。我们从 $\text{std::async()}$ 函数处获得 $\text{std:future}$ 对象，运行的函数一旦完成，其返回值就由该对象最后持有。若要用到这个值，只需在 $\text{future}$ 对象上调用 $\text{std::future::get}$，当前线程就会阻塞，以便 $\text{future}$ 准备妥当并返回该值。
+
+```cpp
+int find_the_answer_to_ituae();
+void do_other_stuff();
+
+int main() {
+  std::future<int> the_answer = std::async(find_the_answer_to_ltuae);
+  do_other_stuff();
+  std::cout<< "The answer is " << the_answer.get() << std::endl;
+}
+```
+
+**在调用 $\textbf{std::async()}$ 时，它可以接收附加参数，进而传递给任务函数作为其参数，此方式与 $\textbf{std::thread}$ 的构造函数相同：参数构建、副本、传递的方式都保持一致**。具体实现可回顾[[#向线程函数传递参数 (2.2)|2.2节]]中的内容。
+
+```cpp
+struct X {
+  void foo(int, const std::string&);
+  std::string bar(const std::string&);
+}:
+X x;
+auto f1 = std::async(&X::foo, &x, 42, "hello");
+// 此处调用 tmpx.bar("googbye")；其中，tmpx 是 x 的副本
+auto f2=std::async(&x::bar, x, "goodbye");
+
+struct Y {
+  double operator()(double);
+}:
+Y y;
+auto f3 = std::async(Y(), 3.141);
+auto f4 = std::async(std::ref(y), 2.718);
+
+X baz(X&);
+std::async(baz, std::ref(x));
+
+class move_only {
+public:
+  move_only();
+  move_only(move_only&&);
+  move_only(const move_only&) = delete;
+  move_only& operator=(move_only&&);
+  move_only& operator=(const move_only&) = delete;
+  void operator()();
+};
+auto f5 = std::async(move_only());
+```
+
+**按默认情况下，$\textbf{std::async()}$ 的具体实现会自行决定——等待 $\textbf{future}$ 时，是启动新线程，还是同步执行任务。如果说需要手动控制这一行为，我们还能够给 $\textbf{std::async()}$ 补充一个参数，以指定采用哪种运行方式。参数的类型是 $\textbf{std::launch}$ 枚举，其值可以是 $\textbf{std::launch:deferred}$ 或 $\textbf{std::launch::async}$。前者指定在当前线程上延后调用任务函数，等到在 $\textbf{future}$ 上调了 $\textbf{wait()}$ 或 $\textbf{get()}$，任务函数才会执；后者指定必须另外开启专属的线程，在其上运行任务函数**。该参数的值还可以是 $\text{std::launch::deferred | std::launch::async}$，这是参数的默认值，表示由 $\text{std::async()}$ 的实现自行选择运行方式。
+#### 关联 future 实例和任务 (4.2.2)
+
+**$\textbf{std::packaged\_task<>}$ 连结了 $\textbf{future}$ 对象与函数（或可调用对象）。$\textbf{std::packaged\_task<>}$ 对象在执行任务时，会调用关联的函数，把返回值保存为 $\textbf{future}$ 的内部数据，并令 $\textbf{future}$ 准备就绪**。它可作为线程池的构件单元，亦可用于其他任务管理方案。例如，为各个任务分别创建专属的独立运行的线程，或者在某个特定的后台线程上依次执行全部任务。若一项庞杂的操作能分解为多个子任务，则可把它们分别包装到多个 $\text{std::packaged\_task<>}$ 实例之中，再传递给任务调度器或线程池。这就隐藏了细节，使任务抽象化，让调度器得以专注处理 $\text{std::packaged\_task<>}$ 实例，无须纠缠于形形色色的任务函数。
+
+$\text{std::packaged\_task<>}$ 是类模板，其模板参数是函数签名(function signature)：譬如，$\text{void()}$ 表示一个不接收参数也没有返回值的函数。假设，我们要构建 $\text{std::packaged\_task<>}$ 实例，那么，由于模板参数先行指定了函数签名，因此传入的函数对象必须与之相符。这些类型不必严格匹配，若某函数接收 $\text{int}$ 类型参数并返回 $\text{float}$ 值，我们则可以为其构建 $\text{std::packaged\_task<double(double)>}$的实例，因为对应的类型可进行隐式转换。
+
+类模板 $\text{std::packaged\_task<>}$ 具有成员函数 $\text{get\_future()}$，它返回 $\text{std::future<>}$ 实例，该 $\text{future}$ 的特化类型取决于函数签名所指定的返回值。**该成员函数解释为 “提取/转移 $\textbf{std::packaged\_task<>}$ 内部所保有的共享状态”，因此一旦在外部获得了 $\textbf{future}$，重复调用将会引发异常**。
+
+另外一点，$\text{std::packaged\_task<>}$ 还具备函数调用操作符，它的参数取决于函数签名的参数列表，因此它可以用作函数对象直接调用。**但要注意的是，$\textbf{std::packaged\_task<>}$ 本质上来说并不产生任何异步行为，它所做的工作仅只是绑定一个可供调用的任务与产生结果的 $\textbf{future}$ 对象。因此，为了在未来的适当时刻执行某项任务，我们可以将其包装在 $\textbf{std::packaged\_task<>}$ 对象内，取得对应的 $\textbf{future}$ 之后，才把该对象传递给其他线程，由它触发任务执行。等到需要使用结果时，我们静候 $\textbf{future}$ 准备就绪即可**。下面的例子解释了这一行为过程：
+
+```cpp
+std::mutex m;
+std::deque<std::packaged_task<void()>> tasks;
+
+bool gui_shutdown_message_received();
+void get_and_process_gui_message();
+void gui_thread() {
+  while(!gui_shutdown_message_received()) {
+    get_and_process_gui_message();
+    std::packaged_task<void()> task;
+    {
+      std::lock_guard<std::mutex> lk(m);
+      if(tasks.empty())
+        continue;
+      task = std::move(tasks.front());
+      tasks.pop_front();
+    }
+  task();
+}
+
+std::thread gui_bg_thread(gui_thread);
+template<typename Func>
+std::future<void> post_task_for_gui_thread(Func f) {
+  std::packaged_task<void()> task(f);
+  std::future<void> res = task.get_future();
+  std::lock_guard<std::mutex> lk(m);
+  tasks.push_back(std::move(task));
+  return res;
+}
+```
+#### 创建 std::promise (4.2.3)
+
+$\text{std::promise<T>}$ 给出了一种异步求值的方法（类型为T），某个 $\text{std::future<T>}$ 对象与结果关联，能延后读出需要求取的值。**配对的 $\textbf{std::promise}$ 和 $\textbf{std::future}$ 可实现下面的作机制：等待数据的线程在 $\textbf{future}$ 上阻塞，而提供数据的线程利用相配的 $\textbf{promise}$ 设定关联的值，使 $\textbf{future}$ 准备就绪**。
+
+**若需从给定的 $\textbf{std::promise}$ 实例获取关联的 $\textbf{std::future}$ 对象，调用前者的成员函数 $\textbf{get\_future()}$ 即可。这与 $\textbf{std::packaged\_task}$ 一样，且重复调用同样会引发异常。承诺($\textbf{promise}$)的值通过成员函数 $\textbf{set\_value()}$ 设置，只要设置好，$\textbf{future}$ 即准备就绪，凭借它就能获取该值。如果 $\textbf{std::promise}$ 在被销毁时仍未曾设置值，保存至 $\textbf{std::future}$ 的数据则由异常代替**。
+
+```cpp
+void process_connections(connection_set& connections) {
+  while(!done(connections)) {
+    for(auto connection = connections.begin(),end=connections.end(); connection!=end; ++connection) {
+      if(connection->has_incoming_data()) {
+        data_packet data = connection->incoming();
+        std::promise<payload_type>& p = connection->get_promise(data.id);
+        p.set_value(data.payload);
+      }
+      if(connection->has_outgoing_data()) {
+        outgoing_packet data = connection->top_of_outgoing_queue();
+        connection->send(data.payload);
+        data.promise.set_value(true); 
+      }
+    }
+  }
+}
+```
+#### 将异常保存到 future 中 (4.2.4)
+
+若经由 $\text{std::async()}$ 调用的函数抛出异常，则会被保存到 $\text{future}$ 中代替本该设定的值，future 随之进入就绪状态，等到其成员函数 $\text{get()}$ 被调用，存储在内的异常即被重新抛出（C++ 标准没有明确规定应该重新抛出原来的异常，还是其副本；为此，不同的编译器和库有不同的选择）。假如我们把任务函数包装在 $\text{std:packaged\_task}$ 对象内，也依然如是。若包装的任务函数在执行时抛出异常，则会代替本应求得的结果被保存到 $\text{future}$ 内并使其准备就绪。只要调用 $\text{get()}$，该异常就会被再次抛出。
+
+自然而然，$\text{std::promise}$ 也具有同样的功能，它通过成员函数的显式调用实现。假如我们不想保存值，而想保存异常，就不应调用 $\text{set\_value()}$，而应调用成员函数 $\text{set\_exception()}$。若算法的并发实现会抛出异常，则该函数通常可用于其 $\text{catch}$ 块中，捕获异常并装填 $\text{promise}$。
+
+```cpp
+extern std::promise<double> some_promise;
+try {
+  some_promise.set_value(calculate_value());
+}
+catch(...) {
+  some_promise.set_exception(std::current_exception());
+}
+```
+
+这里的 $\text{std::current\_exception()}$ 用于捕获抛出的异常。此外，我们还能用 $\text{std::make\_exception\_ptr()}$ 直接保存新异常，而不触发抛出行为。相较于 $\text{try/catch}$ 块，后者不仅简化了代码，还更有利于编译器优化代码，因而应优先采用。
+
+```cpp
+some_promise.set_exception(std::make_exception_ptr(std::logic_error("foo")));
+```
+
+还有另一种法可将异常保存到 $\text{future}$ 中：我们不调用 $\text{promise}$ 的两个 $\text{set\_value/exception()}$ 成员函数，也不执行包装的任务，而**直接销毁与 $\textbf{future}$ 关联的 $\textbf{std::promise}$ 对象或 $\textbf{std::packaged\_task}$ 对象。如果关联的 $\textbf{future}$ 未能准备就绪，无论销毁两者中的哪一个，其析构函数都会将异常 $\textbf{std::future\_error}$ 存储为异步任务的状态数据，它的值是 $\textbf{std::future\_errc::broken\_promise}$**。我们一旦创建 $\text{future}$ 对象，便是许诺会按异步式给出值或异常，但刻意销毁产生它们的来源，就无法提供所求的值或出现的异常，导致许诺被破坏。在这种情形下，倘若编译器不向 $\text{future}$ 存入任何数据，则等待的线程有可能永远等不到结果。
+#### 多个线程一起等待 (4.2.5)
+
+只要同步操作是一对一地在线程间传递数据，$\text{std:future}$ 就都能处理。然而，对于某个 $\text{std::future}$ 实例，如果其成员函数由不同线程调用，它们不会自动同步——**若我们在多个线程上访问同一个 $\textbf{std::future}$ 对象而不采取额外的同步措施，将引发数据竞争并导致未定义行为**。这是 $\text{std::future}$ 特性：它模拟了对异步结果的独占行为，**$\textbf{get()}$ 仅能被有效调用唯一一次**。这个特性令并发访问失去意义，只有一个线程可以获取目标值，**原因是第一次调用 $\textbf{get()}$ 会进行移动操作，之后该值不复存在**。
+
+$\text{std::future}$ 仅能移动构造和移动赋值，所以归属权可在多个实例之间转移，但在相同时刻，只会有唯一一个 $\text{future}$ 实例指向特定的异步结果；相对的，$\text{std::shared\_future}$ 的实例则能复制出副本，这些副本全都指向同一异步任务的状态数据。
+
+ 然而，盲目的改用 $\text{std::shared\_future}$ 仍无法解决问题，原因是同一个对象的成员函数同样未能实现同步原语——若我们从多个线程访问同一个对象，就必须采取锁保护以避免数据竞争。因此，首选的使用方式是：向每个线程传递 $\text{std::shared\_future}$ 对象的副本，它们为各线程独自所有，并被视作局部变量。因此这些副本就作为各线程的内部数据，由标准库正确地同步，可以安全地访问。若多个线程共享异步状态，只要它们通过自有的 $\text{std::shared\_future}$ 对象读取状态数据，则该访问行为是安全的。
+
+**$\textbf{std::shared\_future}$ 的实例依据 $\textbf{std::future}$ 的实例构造而得，前者所指向的异步状态由后者决定。因为 $\textbf{std::future}$ 对象独占异步状态，其归属权不为其他任何对象所共有，所以若要按默认方式构造 $\textbf{std::shared\_future}$ 对象，则须用 $\textbf{std::move}$ 向其默认构造函数传递归属权，这使 $\textbf{std::future}$ 变成空状态(empty state)。为杜绝因错误使用空状态 $\textbf{future}$ 而出现的未定义行为，标准库还提供了成员函数 $\textbf{valid()}$ 用于校验异步状态是否有效。**
+
+```cpp
+std::promise<int> p;
+std::future<int> f(p.get_future());
+assert(f.valid());
+std::shared_future<int> sf(std::move(f));
+assert(!f.valid());
+assert(sf.valid());
+```
+
+除此之外，$\text{std::future}$ 还具有另一个特性，可以根据初始化列表自动推断变量的类型，从使 $\text{std::shared\_future}$ 更便于使用。$\text{std::future}$ 具有成员函数 $\text{share()}$，直接创建新的 $\text{std::shared\_future}$ 对象，并向它转移归属权（使得 $\text{std::future}$ 被置为空状态）。
+
+```cpp
+std::promise<std::map<SomeIndexType, SomeDataType, SomeComparator,
+  SomeAllocator>::iterator> p;
+auto sf = p.get_future().share();
+```
+
+### 限时等待 (4.3)
+
+标准库提供了两种超时(timeout)机制可供选用：一是迟延超时(duration-based timeout)，线程根据指定的时长而继续等待（如30毫秒）；二是绝对超时(absolute timeout)，在某特定时间点(timepoint)来临之前，线程一直等待。大部分等待函数都具有变体，专门处理这两种机制的超时。处理迟延超时的函数变体以 “\_for” 为后缀，而处理绝对超时的函数变体以 “\_until” 为后缀。
+
+例如，$\text{std::condition\_variable}$ 拥有两个 $\text{wait\_for()}$ 成员函数的重载和两个 $\text{wait\_until()}$ 成员函数的重载；它们分别对应于 $\text{wait()}$ 的两个重载——其中一个重载仅等待直到被信号唤醒、超时结束或发生异常唤醒； 另一个则会在被唤醒时检查给定的谓词，并且仅在该谓词为真（且条件变量已被信号触发）或超时结束时返回。
+#### 时钟(clock)类 (4.3.1)
+
+就 C++ 标准库而言，时钟(clock)是时间信息的来源。具体来说，每种时钟都是个类，提供4项关键信息：
+
+- 当前时刻(now)；
+
+- 用于表示从时钟获取的时间的值的类型；
+
+- 该时钟的计时单元的长度(tick period，计时周期)；
+
+- 计时速率是否恒定，即能否将该时钟视为恒稳时钟(steady clock)；
+
+**若要获取某时钟类的当前时刻，调用其静态成员函数 $\textbf{now()}$ 即可，例如，$\textbf{std::chrono::system\_clock::now()}$ 可返回系统时钟的当前时刻。特定时钟的时间点的类型由 $\textbf{time\_point}$ 成员 $\textbf{typedef}$ 指定，因此 $\textbf{some\_clock::now()}$ 的返回类型是 $\textbf{some\_clock::time\_point}$。**
+
+**时钟类的计时单元以秒的分数形式指定**，该值由时钟的 $\text{period}$ 成员 $\text{typedef}$ 给出——若时钟每秒计数 25 次，它的计时单元即为 $\text{std::ratio<1,\ 25>}$；若时钟每隔 2.5 秒计数 1 次，则其计时单元为 $\text{std:ratio<5,\ 2>}$。如果时钟的计时周期在运行时无法确定，或者在程序的某次运行过程中可能会发生变化，则该周期可以指定为平均时钟周期、最小可能时钟周期，或者库编写者认为合适的其他值。**虽然时钟类设定了计时单元，但无法保证程序在某次运行中观察到的时钟周期与该时钟的指定周期相匹配。** ^f4080b
+
+若时钟的计时速率恒定（无论该速率是否与计时单元相符）且无法调整，则称之为恒稳时钟。**时钟类具有静态数据成员 $\textbf{is\_steady}$，该值在恒稳时钟内为 $\textbf{true}$，否则为 $\textbf{false}$**。通常，**$\textbf{std::chrono::system\_clock}$ 类不是恒稳时钟，因为它可调整。即便这种调整自动发生，作用是消除本地系统时钟的偏差，依然可能导致：调用两次 $\textbf{now()}$，后来返回的时间值甚至早于前一个，结果违反恒定速率的规定**。恒稳时钟对于超时时限的计算至关重要，因此，**C++ 标准库提供了恒稳时钟类 $\text{std::chrono::steady\_clock}$。**
+
+C++ 标准库还给出了其他时钟类：如前文提到的**系统时钟类 $\textbf{std::chrono::system\_clock}$，该类表示系统的“真实时间”，它具备成员函数 $\textbf{from\_time\_t()}$ 和 $\textbf{to\_time\_t()}$，将 $\textbf{time\_t}$ 类型的值和自身的 $\textbf{time\_point}$ 值互相转化**；还有**高精度时钟类 $\textbf{std::chrono::high\_resolution\_clock}$，在 C++ 标准库提供的全部时钟类里，它具备可能实现的最短计时单元（因而具有可能实现的最高时间精度）。**
+#### 时长(duration)类 (4.3.2)
+
+**$\textbf{std::chrono::duration<>}$ 是标准库中支持的最简单的时间部件（C++ 标准库用到不少处理时间的工具，它们全都位于命名空间 $\textbf{std::chrono}$ 内）。它是类模板，具有两个模板参数：前者指明采用何种类型表示计时单元的数量（如 $\textbf{int, long, double}$）；后者为[[#^f4080b|上一小节]]中所提到的计时单元，表示为时长所采用的时间计量单位**。例如，采用 $\text{short}$ 值计数的分钟时长类是 $\text{std::chrono::duration<short,\ std:ratio<60,\ 1>>}$；采用 $\text{double}$ 值计数的毫秒时长类 $\text{std::chrono::duration<double,\ std::ratio<1,\ 1000>>}$。
+
+**标准库在 $\textbf{std::chrono}$ 命名空间中，给出了一组预设的时长类的 $\textbf{typedef}$ 声明：$\textbf{nanoseconds}$(纳秒)、$\textbf{microseconds}$(微秒)、$\textbf{milliseconds}$(毫秒)、$\textbf{seconds}$(秒)、$\textbf{minutes}$(分钟) 和 $\textbf{hours}$(小时)。它们都采用取值范围足够大的整型表示计数**，如果真有需要，用户只需选择合适的计时单元，就能表示出一个跨度超过 500 年的时长——**头文件 $\textbf{<ratio>}$ 给出了针对国际单位制的词头倍数的全部 $\textbf{typedef}$ 声明，可用于可以用于自定义时长，范围从 $\textbf{std::atto}\ (10^{-18})$ 到 $\textbf{std::exa}\ (10^{18})$。如 $\textbf{std::duration<double,\ std::centi>}$ 其单元为百分秒，并以 $\textbf{double}$ 值表示计数。**
+
+为方便起见，**C++14 引入了名字空间 $\textbf{std::chrono\_literals}$，其中预定义了一些字面量后缀运算符(literal suffix operator)**。这能够缩短明写代码的时长值，举例如下：
+
+```cpp
+using namespace std::chrono_literals;
+auto one_day = 24h;
+auto half_an_hour = 30min;
+auto max_time_between_messages = 30ms;
+```
+
+**如果与整数字面值一起使用，这些后缀就相当于由 $\textbf{typedef}$ 给出的预设时长类，因此，$\textbf{15ns}$ 和 $\textbf{std::chrono:nanoseconds(15)}$ 是两个相等的值。然而，假如和浮点数字面值一起使用，这些后缀会按适当的量级创建出时长类，它以某种浮点值计数，由程序库实现自行选择具体的浮点类型，但类型并不明确。因此，$\textbf{2.5min}$ 将具现化为 $\textbf{std:chrono:duration<some-floating-type,\ std:ratio<60,1>>}$。**
+
+**在无需截断数值的情况下，时长之间的转换是隐式的（因此将小时转换为秒是可行的，但将秒转换为小时则不可行）。显式转换可通过 $\textbf{std::chrono::duration\_cast<>}$ 实现，但这可能会造成精度上的损失。**
+
+```cpp
+// ms = 54802
+std::chrono::mi1liseconds ms(54802);
+// s  = 54
+std::chrono::seconds s = std::chrono::duration_cast<std::chrono::seconds>(ms);
+```
+
+**时长类支持算术运算，我们将时长乘或除以一个数值（这个数值与该时长类的计数类型相符，即其第一个模板参数），或对两个时长进行加减，就能得出一个新时长**。因此，$\text{5 * seconds(1)}$ 与 $\text{seconds(5)}$ 或 $\text{minutes(1) – seconds(55)}$ 结果相同。**计时单元的数量可通过成员函数 $\textbf{count()}$ 获取，因而 $\textbf{std::chrono::milliseconds(1234).count()}$ 的结果为 1234。**
+
+**支持迟延超时的等待需要用到 $\textbf{std:chrono::duration<>}$ 的实例**。举例如下，我们等待某个 $\text{future}$ 进入就绪状态，并以 35 毫秒为限。
+
+```cpp
+std::future<int> f = std::async(some_task);
+if(f.wait_for(std::chrono::milliseconds(35)) == std::future_status::ready) {
+  do_something_with(f.get());
+}
+```
+
+**所有等待函数都返回一个状态值，指明是否超时或目标事件是否已发生。上例中，我们借助 $\textbf{future}$ 进行等待，所以一旦超时，函数就返回 $\textbf{std::future\_status::timeout}$；假如准备就绪，则函数返回 $\textbf{std::future\_status::ready}$；若 $\textbf{future}$ 的相关任务被延后，函数返回 $\textbf{std::future\_status::deferred}$。迟延超时的等待需要一个参照标准，它采用了标准库内部的恒稳时钟，只要代码指定了等待 35 毫秒，那现实中等待的时间就是 35 毫秒，即使期间系统时钟发生调整（无论提前还是延后）。当然，在形形色色的操作系统中，调度策略变化各异，且系统时钟精度互不相同，这就有可能导致从线程发起调用到函数返回，历时远超 35 毫秒。**
+#### 时间点(time-points)类 (4.3.3)
+
+**时钟的时间点由 $\textbf{std::chrono::time\_point<>}$ 类模板的实例表示，该实例通过第一个模板参数指定其所指代的时钟类型，并通过第二个模板参数指定测量单位（即 $\textbf{std::chrono::duration<>}$ 的特化形式）。时间点是一个时间跨度，始于一个称为时钟纪元(epoch)的特定时刻，终于该时间点本身。跨度的值表示某具体时长（模板参数指定的测量单位）的倍数**。**时钟纪元是一个基础特性，却无法直接查询，C++ 标准也未进行定义。典型的纪元包括 1970 年 1 月 1 日 00:00，或运行应用程序的计算机启动的时刻。不同的时钟可能共享一个纪元，也可能拥有独立的纪元**。若时钟类 $C1, C2$ 都共享自一个纪元，那么 $C1$ 的 $\text{time\_point}$ 成员类型还可以是 $\text{typedef std::chrono::time\_point<C2,\ C1::Duration>\ time\_point}$。**虽然无法直接得知纪元的时间点，但可以针对给定的 $\textbf{time\_point}$ 获取 $\textbf{time\_since\_epoch()}$ 的值。该成员函数返回一个时长值，表示从时钟纪元到该特定时间点所经过的时间长度**。
+
+**我们可将时间点加减时长（即令 $\textbf{std::chrono::time\_point}$ 实例加减 $\textbf{std::chrono::duration<>}$ 实例）从而得出新的时刻**。据此，$\text{std::chrono::high\_resolution\_clock::now() + std::chrono::nanoseconds(500)}$ 会给出 500 纳秒以后的未来时刻。这意味着，只要知道运行段代码所允许的最大时限，我们就能方便地计算出绝对超时的时刻。
+
+**若两个时间点共享同一个时钟，我们也可以将它们相减，得到的结果是两个时间点间的时长**。这能用于代码计时，举例如下。
+
+```cpp
+auto start = std::chrono::high_resolution_clock::now();
+do_something();
+auto stop = std::chrono::high_resolution_clock::now();
+
+std::cout << "do_something() took
+  << std::chrono::duration<double, std::chrono::seconds>(stop - start).count()
+  << " seconds"
+  << std::endl;
+```
+
+$\text{std::chrono::time\_point}$ 实例的第一个模板参数是某时钟类，它除了间接指定时钟纪元，还有别的功能。等待函数若要处理绝对超时，则需接收时间点实例作为参数，该实例的相关时钟会用作参考，计算是否超时。当时钟发生变化时，这会产生重要影响，**因为等待函数会追踪时钟的变化，并且只有在时钟的 $\text{now()}$ 函数返回的值晚于指定的超时时间后，才会返回——如果时钟被向前调整，这可能会缩短等待的总时长（以恒定时钟为基准测量）；如果时钟被向后调整，这可能会延长等待的总时长。**
+
+**时间点用于带有后缀 “$\textbf{\_until}$” 的等待函数的变体**。为了预先安排操作，我们需计算某一具体未来时刻——在程序代码中的某个固定位置，将 $\text{some\_clock::now()}$ 和前向偏移相加得出时间点。假定某目标事件与条件变量相关，若我们最多可以等待500毫秒，则实现代码参考如下：
+
+```cpp
+std::condition_variable cv;
+bool done;
+std::mutex m;
+bool wait_loop() {
+  auto const timeout = 
+    std::chrono::steady_clock::now() + std::chrono::milliseconds(500);
+  std::unique_lock<std::mutex> lk(m);
+  while(!done) {
+    if(cv.wait_until(lk,timeout) == std::cv_status::timeout) {
+      break;
+    }
+  }
+  return done;
+}
+```
+
+**如果条件变量“等待”时没有提供谓词，那么带超时的“等待”最好采用上例 $\textbf{wait\_until()}$ 的做法。因为这样可以保证整个等待循环的总耗时不会无限增长**。在 [[#凭借条件变量等待条件成立 (4.1.1)|4.1.1节]] 中已经介绍过伪唤醒，为避免这一问题，不带谓词的“等待”必须放入至循环体内。**在这种条件之下，如果改用等待操作为 $\textbf{wai\_for()}$ 就极有可能发生这样的情况：一次伪唤醒来之前，线程已经差不多等满了这一次超时时间；可伪唤醒后重新进入下一轮循环时，计时又从头开始。这样反复下去，总共等待多久就没法限制了。**
+
+### 运用同步操作简化代码 (4.4)
+
+#### 利用 future 进行函数式编程 (4.4.1)
+
+**函数式编程(FP)一词指的是一种编程风格，其中函数调用的结果完全取决于该函数的参数，而不依赖于任何外部状态。这与数学中的函数概念相关，意味着如果使用相同的参数调用该函数两次，结果将完全相同**。这是 C++ 标准库中许多数学函数（如 $\text{sin}$、$\text{cos}$ 和 $\text{sqrt}$）以及基本类型上的简单运算（如 $3+3$、$6*9$ 或 $1.3/4.7$）所具备的特性。**纯函数(pure function)不会修改任何外部状态；函数的作用完全仅限
+于返回值。**
+
+这使得问题易于理解，尤其是在涉及并发时，因为[[#Chapter <font color = "red">3</font> 在线程间共享数据|第 3 章]]中讨论的许多与共享内存相关的问题都消失了。**如果不对共享数据进行修改，就不会出现竞争条件，因此也不需要使用互斥锁来保护共享数据**。这种简化如此强大，**以至于像 Haskell 这样的编程语言，其中所有函数默认都是纯函数；这种趋势在并发系统编程中正变得越来越流行**。由于大多数内容都是纯函数，那些实际上会修改共享状态的非纯函数(impure function)就显得尤为突出，因此更容易推断它们如何融入应用程序的整体结构当中。
+
+不过，函数式编程的优势并不局限于那些将其作为默认范式的语言。C++ 是一种多范式语言，完全可以采用函数式编程风格编写程序。随着 $\text{lambda}$ 函数的出现、$\text{std::bind}$ 的引入，以及变量自动类型推导(automatic type deduction)功能的推出，在 C++11 中实现这一点比在 C++98 中更为容易。**$\textbf{future}$ 是让 C++ 中函数式风格并发成为可能的最后一块拼图；$\textbf{future}$ 可以在线程之间传递，从而使一个计算的结果依赖于另一个计算的结果，而无需显式访问共享数据。**
+
+```cpp
+template<typename T>
+std::list<T> parallel_quick_sort(std::list<T> input)
+  if(input.empty()) {
+    return input;
+  }
+
+  std::list<T> result;
+  result.splice(result.begin(),input,input.begin());
+
+  T const& pivot = *result.begin();
+  auto divide_point = std::partition(
+    input.begin(), input.end(), [&](T const& t { return t<pivot; });
+
+  std::list<T> lower_part;
+  lower_part.splice(lower_part.end(), input, input.begin(), divide_point);
+
+  std::future<std::list<T>> new_lower( 
+    std::async(&parallel_quick_sort<T>, std::move(lower_part)));
+  auto new_higher(
+    parallel_quick_sort(std::move(input)));
+
+  result.splice(result.end(), new_higher);
+  result.splice(result.begin (), new_lower.get());
+
+  return result;
+}
+```
+
+上面的示例代码给出了函数式编程风格的快速排序的并行实现，代码按传值的方式接收链表作为参数，并生成新的有序链表作为结果，同样按传值的方式返回，有别于 $\text{std::sort()}$ 的就地排序(sorting in place)。相较于 C++17 标准库给出的快速排序的并发重载版本，这并不是一种理想的实现，主要原因有二：其一是，每进入新一轮的递归，$\text{std::async}$ 所开启的线程数目将以指数级的方式增长，一旦任务数目超出了可供调配的并发资源将导致性能退化；其二是，$\text{std::partition}$ 承担了大量工作，然而它却是一个串行调用。但这已经足够了，重点在于体会到如何将原有的结构改造为函数式编程风格，并理解函数式编程风格与并发编程二者之间如何达到相辅相成的效果。
+
+函数式编程并不是唯一一种摒弃共享可变数据(shared mutable data)的并发编程范式；另一种范式是通信式串进程(Communicating Sequential Process, CSP)，在该范式中，线程在概念上是完全独立的，没有共享数据，但通过通信通道在它们之间传递消息。这是编程语言 Erlang(http://www.erlang.org/) 所采用的范式，也是 C 和 C++ 语言中常用于高性能计算的 MPI(Message Passing Interface, http://www.mpiforum.org/) 环境所采用的范式。
+#### 使用消息传递进行同步 (4.4.2)
+
+CSP 的理念很简单：如果没有共享数据，那么每个线程都可以完全独立地进行推理，只需要根据它对所接收到消息的响应方式来分析即可。因此，每个线程实际上都等同于一个状态机：当它收到一条消息时，它会以某种方式更新自己的状态，并且可能向其他线程发送一条或多条消息，而具体如何处理则取决于它的初始状态。编写这类线程的一种方法，是将这种思想形式化并实现成一个有限状态机(Finite State Machine, FSM)模型，但这并不是唯一的方法，状态机也可以隐含在应用程序的结构之中。无论选择怎样实现每个线程，将系统拆分成彼此独立的处理过程，都有可能消除共享数据并发中大量的复杂性，从而让编程变得更容易，降低出错率。
+
+真正的 CSP 并不存在共享数据，所有通信都通过消息队列传递——我们无需在忧虑并发和同步的问题，在某个具体的状态下，仅仅专注于所应该收发的消息即可。但是，由于 C++ 线程共享同一个地址空间，因此无法强制保证这一要求。这时就需要依靠纪律约束：作为应用程序或库的作者，我们有责任确保线程之间不共享数据。当然，为了让线程能够通信，消息队列本身必须是共享的，但这些细节可以封装在库内部。
+
+遵循 CSP 风格的程序设计有时也可称为角色模型(actor model)：系统中含有一些分散的角色(actor)，它们各自在独立线程上运行，它们彼此收发消息以执行手上的任务，还直接通过消息传递状态，但除此之外，它们之间没有共享数据。这样的做法可大幅简化并发系统的设计工作，同时也是 “分离关注点” 软件设计原则的良好实现：通过利用多个线程，整体任务按要求被明确划分。
+#### latch 和 barrier——并发技术规约提出的新特性 (4.4.7)
+
+首先，先明确一下这里所说的 $\text{latch}$ 和 $\text{barrier}$ 的含义。
+
+**$\textbf{latch}$ 是一种同步对象：当它内部的计数器递减到 0 时，它就会进入就绪状态。之所以叫 $\textbf{latch}$，是因为它具有“锁存”的特性——一旦变为就绪状态，它就会一直保持就绪，直到该对象被销毁为止**。因此，$\text{latch}$ 可以看作是一种轻量级的同步机制，用来等待一系列事件全部发生。
+
+而 $\text{barrier}$ 则不同。它是一种可复用的同步组件，主要用于一组线程之间的内部同步。**对于 $\textbf{latch}$ 来说，并不关心到底是哪些线程去递减这个计数器：可以是同一个线程递减多次，也可以是多个线程各递减一次，或者是这两种方式的任意组合**。**但 $\textbf{barrier}$ 有更严格的约束：在每一个同步周期中，每个线程只能到达 $\textbf{barrier}$ 一次。当各个线程到达 $\textbf{barrier}$ 时，它们会被阻塞，直到参与这一轮同步的所有线程都到达该 $\textbf{barrier}$。此时，这些线程才会被统一释放，继续向下执行。之后，这个 $\textbf{barrier}$ 还可以继续复用——线程们可以在下一轮再次到达该 $\textbf{barrier}$，并继续等待所有线程全部到齐。**
+#### std::latch (4.4.8)
+
+$\text{std::latch}$ 的构造函数接收唯一一个参数，在构建该类对象时，我们需通过这个参数设定其计数器的初值。接下来，每当等待的目标事件发生时，我们就在 $\text{latch}$ 对象上调用 $\text{count\_down()}$，一旦计数器减到 0，它就进入就绪状态。若我们要等待 $\text{latch}$ 的状态变为就绪，则在其上调用 $\text{wait()}$；若需检查其是否已经就绪，则调用 $\text{is\_ready}$。最后，假如我们要使计数器减持，同时要等待它减到 0，则应该调用$\text{count\_down\_and\_wait()}$。
+
+```cpp
+void foo() {
+  unsigned const thread_count = ...;
+  std::latch done(thread_count);
+  my_data data[thread_count];
+  std::vector<std::future<void>> threads;
+  for(unsigned i = 0; i < thread_count; ++i) {
+    threads.push_back(std::async(std::launch::async, [&, i] { ◄── ①
+       data[i] = make_data(i);
+       done.count_down(); ◄── ②
+       do_more_stuff(); ◄── ③
+    }));
+  }
+  
+  done.wait(); ◄── ④
+  process_data(data,thread_count); ◄── ⑤
+}
+```
+
+上述示例代码中，依据需要等待的目标事件数目，我们先构建 $\text{std::latch}$ 对象 $\text{done}$，接着，用 $\text{std::async()}$ 发起相同数量的线程①。各线程负责生成相关的数据块，在完成时即令  $\text{latch}$ 计数器减持②，然后进行下一步处理③。主线程在处理最终数据之前⑤，只要在 $\text{latch}$ 上等待④，就能等到全部数据准备完成。各线程在③处分别完成各自最后的处理步骤，而在⑥处对数据进行整体处理，两者将有可能并发进行。
+
+值得一提的是，**对于 $\textbf{std::async}$ 采用 $\textbf{std::launch::async}$ 作为启动策略的情景，如果关联 $\textbf{future}$ 在被析构时线程仍未结束，则析构函数会等待线程执行完毕后才会继续往下执行。因此，这保证了在 $\textbf{foo}$ 函数退出前，所有额外开启的线程都已全部结束运行。**
+
+在 process_data 调用中⑤访问 $\text{data}$ 是安全的，尽管 $\text{data}$ 是由在其他线程中运行的任务存储的，但由于 $\text{latch}$ 是一个同步对象，因此对调用 $\text{count\_down()}$ 的线程可见的更改，也保证对从对同一 $\text{latch}$ 对象的 $\text{wait()}$ 调用中返回的线程可见。从形式上讲，$\text{count\_down()}$ 的调用会与 $\text{wait()}$ 的调用同步。
+#### std::barrier (4.4.9)
+
+并发技术规约提出了两种 $\text{barrier}$——$\text{std::barrier}$ 和 $\text{std::flexbarrier}$。前者相对简单，因额外开销可能较低，而后者更加灵活，但额外开销可能较高。
+
+ 假设有一组线程正在处理某些数据。每个线程都可以独立于其他线程对数据进行处理，因此处理过程中无需同步，但必须等到所有线程都完成处理后，才能处理下一个数据项或进行后续处理。$\text{std::barrier}$ 正是针对这种情况设计的。**通过指定同步组(synchronization group)中涉及的线程数量来构建一个 $\textbf{barrier}$。当每个线程完成处理后，它会到达 $\textbf{barrier}$ 处，并通过调用屏障对象的 $\textbf{arrive\_and\_wait()}$ 方法等待组内其余线程。当组内最后一个线程到达时，所有线程将被释放，$\textbf{barrier}$ 被重置。随后，组内的线程可以恢复处理，并根据情况处理下一个数据项或进入处理的下一阶段。**
+
+与 $\text{latch}$ 不同，$\text{latch}$ 一旦就绪就会一直保持就绪状态，而 $\text{barrier}$ 则不然——**$\textbf{barrier}$ 会释放等待的线程，然后自我重置以便再次使用。此外，$\textbf{barrier}$ 仅在特定线程组内进行同步——除非某个线程属于该同步组，否则它无法等待 $\textbf{barrier}$ 就绪。线程可以通过在 $\textbf{barrier}$ 上调用  $\textbf{arrive\_and\_drop()}$ 显式地退出该组，此时该线程将无法再等待 $\textbf{barrier}$ 就绪，且下一个周期必须到达的线程数将比当前周期必须到达的线程数减少一个。**
+
+```cpp
+result_chunk process(data_chunk);
+std::vector<data_chunk> divide_into_chunks(data_block data, unsigned num_threads);
+
+void process_data(data_source &source, data_sink &sink) {
+  unsigned const concurrency = std::thread::hardware_concurrency();
+  unsigned const num_threads = (concurrency > o) ? concurrency : 2;
+  
+  std::barrier sync(num_threads);
+  std::vector<joining_thread> threads(num_threads);
+  
+  std::vector<data_chunk> chunks;
+  result_block result;
+  
+  for (unsigned i = O; i < num_threads; ++i) {
+    threads[i] = joining_thread([&, i] {
+      while (!source.done()) {
+        if (!i) {
+          data block current_block = source.get_next_data_block();
+          chunks = divide_into_chunks(current_block, num_threads);
+        }
+        sync.arrive_and_wait(); ◄── ①
+        result.set_chunk(i, num_threads, process(chunks[i]));
+        sync.arrive_and_wait(); ◄── ②
+        if (!i) {
+          sink.write_data(std::move(result));
+        }
+      }
+    }
+  }
+}
+```
+
+本例值得注意的一个要点是：两个 $\text{arrive\_and\_wait()}$ 调用所在的位置很重要，它们保证全部线程都已到达，否则任何线程都不能继续前行。在第一个同步点(synchronization point)①，我们通过 $\text{barrier}$ 给出了清晰的界限，其他所有线程都在该处等待 0 号线程。而第二个同步点的情形则相反②，0 号线程在该处等待其他线程，只有它们全部到达它才可将完成的结果写到 $\text{sink}$。
+#### std::flex_barrier (4.4.10)
+
+$\text{std::flex\_barrier}$ 类的接口与 $\text{std::barrier}$ 类的不同之处仅仅在于：**前者具备另一个构造函数，其参数既接收线程的数目，还接收完成函数(completion function)。只要全部线程都运行到 $\textbf{barrier}$ 处，该函数就会在其中任意一个线程上运行（并且是唯一一个）。它不但提供了机制，可以设定后续代码，令其必须按串行方式运行。同时还给出了一种方法用于改变下一同步周期须到达该处的线程数目——若完成函数返回 -1，则说明下一轮参与同步的线程数目保持不变；若返回值是 0 或正整数，则将其作为指标，设定参与下一同步周期的线程数目。**
+
+我们通过完成函数设定串行区域，其功能相当强大，还能改变参与同步的线程数目。例如，在流水线模式的任务中，不同阶段所需的并行线程数可能不同；中间主要处理阶段往往需要更多线程，而输入/输出阶段可能只需要较少线程，因此可以借助 $\text{std::flex\_barrier}$ 的完成函数动态调整参与工作的线程数量，以提高整体效率。
+
+```cpp
+void process_data(data_source &source, data_sink &sink) {
+  unsigned const concurrency = std::thread::hardware_concurrency();
+  unsigned const num_threads = (concurrency > o) ? concurrency : 2;
+  
+  std::vector<data_chunk> chunks;
+
+  auto split_source = [&] {
+    if (!source.done()) {
+      data_block current_block = source.get_next_data_block();
+      chunks = divide_into_chunks(current_block, num_threads);
+    }
+  };
+  
+  split_source();
+  
+  result_block result;
+  std::flex_barrier sync(num_threads, [&] {
+    sink.write_data(std::move(result));
+    split_source();
+    return -1;
+  });
+  std::vector<joining_thread> threads(num_threads);
+  
+  for (unsigned i = O; i < num_threads; ++i) {
+    threads[i] = joining_thread([&, i] {
+      while (!source.done()) {
+        result.set_chunk(i, num_threads, process(chunks[il));
+        sync.arrive_and_wait();
+      }
+    });
+  }
+}
+```
 
